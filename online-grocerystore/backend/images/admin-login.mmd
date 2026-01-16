@@ -1,0 +1,38 @@
+sequenceDiagram
+    actor Admin as Admin User
+    participant Frontend as Frontend (React)
+    participant Backend as Backend API
+    participant Auth as authMiddleware.protect
+    participant AdminGuard as authMiddleware.admin
+    participant DB as MongoDB
+
+    Admin->>Frontend: Enter Email & Password
+    Admin->>Frontend: Click "Admin Sign In"
+    Frontend->>Backend: POST /api/users/login (email, password)
+    Backend->>DB: Find User by Email
+    DB-->>Backend: User Document (includes isAdmin flag)
+    alt Invalid credentials
+        Backend-->>Frontend: 401 Unauthorized (Invalid email or password)
+        Frontend-->>Admin: Show error message
+    else Valid credentials
+        Backend->>Backend: Compare Password (bcrypt)
+        alt Not Admin (isAdmin=false)
+            Backend-->>Frontend: 403 Forbidden (Not authorized as admin)
+            Frontend-->>Admin: Show not-authorized message
+        else isAdmin=true
+            Backend->>Backend: Generate JWT Token
+            Backend-->>Frontend: 200 OK (User Data + Token)
+            Frontend->>Frontend: Store Token (LocalStorage/State)
+            Frontend->>Backend: GET /api/admin/* with Bearer Token
+            Backend->>Auth: Validate Token (protect)
+            Auth-->>Backend: req.user attached
+            Backend->>AdminGuard: Check req.user.isAdmin
+            alt Admin check fails
+                AdminGuard-->>Frontend: 401 Not authorized as admin
+                Frontend-->>Admin: Show not-authorized message
+            else Admin check passes
+                AdminGuard-->>Frontend: Access granted to admin resources
+                Frontend-->>Admin: Render Admin Dashboard
+            end
+        end
+    end

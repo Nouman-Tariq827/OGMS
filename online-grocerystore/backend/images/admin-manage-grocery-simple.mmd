@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor Admin
+    participant Frontend
+    participant Backend
+    participant Auth
+    participant Controller
+    participant DB
+
+    Admin->>Frontend: Create/Update/Delete product
+    Frontend->>Backend: POST/PUT/DELETE /api/products (Bearer)
+    Backend->>Auth: Validate token + admin
+    Auth-->>Backend: Authorized
+    Backend->>Controller: manageProduct
+    Controller->>DB: Save/Delete product
+    DB-->>Controller: OK
+    Controller-->>Backend: 200/201 response
+    Backend-->>Frontend: Success JSON
+    Frontend-->>Admin: Catalogue updated

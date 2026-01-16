@@ -1,0 +1,27 @@
+sequenceDiagram
+    actor Admin
+    participant Frontend
+    participant Backend
+    participant Auth
+    participant Controller
+    participant DB
+
+    Admin->>Frontend: Select Sales date range
+    Frontend->>Backend: GET /api/reports/sales (Bearer)
+    Backend->>Auth: Validate token + admin
+    Auth-->>Backend: Authorized
+    Backend->>Controller: getSalesReport
+    Controller->>DB: Aggregate orders
+    DB-->>Controller: Metrics
+    Controller-->>Backend: Report JSON
+    Backend-->>Frontend: Charts/Table
+
+    Admin->>Frontend: Open Stock Report
+    Frontend->>Backend: GET /api/reports/stock (Bearer)
+    Backend->>Auth: Validate token + admin
+    Auth-->>Backend: Authorized
+    Backend->>Controller: getStockReport
+    Controller->>DB: Find low stock items
+    DB-->>Controller: Items
+    Controller-->>Backend: Report JSON
+    Backend-->>Frontend: Table/Export

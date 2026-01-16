@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor User
+    participant Frontend
+    participant Backend
+    participant DB
+
+    User->>Frontend: Enter name, email, password
+    Frontend->>Backend: POST /api/users
+    Backend->>DB: Check existing user
+    alt Email exists
+        Backend-->>Frontend: 400 User already exists
+        Frontend-->>User: Show error
+    else New user
+        Backend->>DB: Create user
+        DB-->>Backend: User created
+        Backend-->>Frontend: 201 Created (JWT token)
+        Frontend-->>User: Redirect to Home
+    end

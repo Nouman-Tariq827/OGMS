@@ -1,0 +1,23 @@
+sequenceDiagram
+    actor User
+    participant Frontend as Frontend (React)
+    participant API as Backend API
+    participant Controller as productController
+    participant DB as MongoDB
+
+    User->>Frontend: Enter keyword (e.g., "rice")
+    User->>Frontend: Optionally set filters (category, price range)
+    Frontend->>API: GET /api/products?keyword=rice&pageNumber=1
+    activate API
+    API->>Controller: getProducts(req.query)
+    activate Controller
+    Note over Controller: Current backend applies regex on name and pagination
+    Controller->>DB: Product.countDocuments({ name: { $regex, $options: 'i' } })
+    Controller->>DB: Product.find({ name: { $regex, $options: 'i' } }).limit(pageSize).skip(offset)
+    DB-->>Controller: Matching products, count
+    Controller-->>API: { products, page, pages }
+    deactivate Controller
+    API-->>Frontend: JSON response with paginated products
+    deactivate API
+    Frontend-->>User: Display results and pagination controls
+

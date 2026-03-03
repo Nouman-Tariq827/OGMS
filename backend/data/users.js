@@ -1,11 +1,10 @@
-import bcrypt from 'bcryptjs'
+import mongoose from 'mongoose'
 
 const users = [
   {
+    _id: '69a1f202dee8fb4adb06ca92',
     name: 'Admin User',
     email: 'admin@example.com',
-    password: bcrypt.hashSync('123456', 10),
-    isAdmin: true,
     cnic: '12345-6789012-3',
     phoneNumber: '0312-3456789',
     address: 'Admin House #1, Street 1',
@@ -13,11 +12,16 @@ const users = [
     region: 'Lahore',
     postcode: '54000',
     country: 'Pakistan',
+    password: '$2a$10$EFxPPC.o3oigVCvpKBXcLeudKdr4fEd2VuctKgDfF6txq1MRk4mCa',
+    isAdmin: true,
+    __v: 0,
+    createdAt: '2026-02-27T19:35:30.742Z',
+    updatedAt: '2026-02-27T19:35:30.742Z'
   },
   {
-    name: 'Thrishna',
-    email: 'thrishna@gmail.com',
-    password: bcrypt.hashSync('123456', 10),
+    _id: '69a1f202dee8fb4adb06ca93',
+    name: 'Zrar',
+    email: 'zrar@gmail.com',
     cnic: '22345-6789012-3',
     phoneNumber: '0321-3456789',
     address: 'User House #2, Street 2',
@@ -25,11 +29,16 @@ const users = [
     region: 'Lahore',
     postcode: '54000',
     country: 'Pakistan',
+    password: '$2a$10$BATjgwIS/u0Z5NnDZRNK9OfXRPGTmbRlNFLoJX79eaSyjzUzYiUNa',
+    isAdmin: false,
+    __v: 0,
+    createdAt: '2026-02-27T19:35:30.743Z',
+    updatedAt: '2026-03-03T14:54:52.415Z'
   },
   {
+    _id: '69a1f202dee8fb4adb06ca94',
     name: 'Ali',
     email: 'ali@gmail.com',
-    password: bcrypt.hashSync('123456', 10),
     cnic: '32345-6789012-3',
     phoneNumber: '0333-3456789',
     address: 'User House #3, Street 3',
@@ -37,8 +46,12 @@ const users = [
     region: 'Lahore',
     postcode: '54000',
     country: 'Pakistan',
-  },
+    password: '$2a$10$jUwPUaD0vY7bdMN3TVfxqO48cqDeZ6j867BffB45Yey1zEKeCakQG',
+    isAdmin: false,
+    __v: 0,
+    createdAt: '2026-02-27T19:35:30.743Z',
+    updatedAt: '2026-02-27T19:35:30.743Z'
+  }
 ]
 
 export default users
-

@@ -50,4 +50,10 @@ PAYPAL_CLIENT_ID = your paypal client id
 
 ### Landing Page Snapshot
 [![test](https://user-images.githubusercontent.com/42378118/133815926-7bb15f35-dd8e-4fb5-b6b6-cdd2cd48bc20.png)](https://onlinegroceryapp.herokuapp.com/)
+
+## Author
+
+**Nouman Tariq**
+- GitHub: [@Nouman-Tariq827](https://github.com/Nouman-Tariq827)
+- Email: noumantariq827@gmail.com
  

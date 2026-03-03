@@ -3,7 +3,7 @@
   "proxy": "http://127.0.0.1:5001",
   "version": "0.1.0",
   "private": true,
-  "author": "Nouman-Tariq",
+  "author": "Nouman Tariq <noumantariq827@gmail.com>",
   "dependencies": {
     "axios": "^1.6.0",
     "react": "^17.0.2",

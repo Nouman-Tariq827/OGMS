@@ -1,0 +1,72 @@
+sequenceDiagram
+    actor Admin as Admin User
+    participant Frontend as Frontend (React)
+    participant Backend as Backend API
+    participant Auth as authMiddleware.protect
+    participant AdminGuard as authMiddleware.admin
+    participant Controller as productController
+    participant DB as MongoDB
+
+    rect rgb(240,240,240)
+    Note over Admin,Frontend: Create Product
+    Admin->>Frontend: Open Admin Products and click "Create"
+    Frontend->>Backend: POST /api/products (Bearer Token)
+    Backend->>Auth: Validate Token
+    Auth-->>Backend: req.user attached
+    Backend->>AdminGuard: Check req.user.isAdmin
+    alt Not admin
+        AdminGuard-->>Frontend: 401 Not authorized as admin
+        Frontend-->>Admin: Show not-authorized message
+    else Admin ok
+        Backend->>Controller: createProduct(req, res)
+        Controller->>DB: Save new Product
+        DB-->>Controller: Created product
+        Controller-->>Backend: 201 Created
+        Backend-->>Frontend: Product JSON
+        Frontend-->>Admin: Show new product in list
+    end
+    end
+
+    rect rgb(240,240,240)
+    Note over Admin,Frontend: Update Product
+    Admin->>Frontend: Edit product details
+    Frontend->>Backend: PUT /api/products/:id (Bearer Token)
+    Backend->>Auth: Validate Token
+    Auth-->>Backend: req.user attached
+    Backend->>AdminGuard: Check req.user.isAdmin
+    alt Not admin
+        AdminGuard-->>Frontend: 401 Not authorized as admin
+        Frontend-->>Admin: Show not-authorized message
+    else Admin ok
+        Backend->>Controller: updateProduct(req, res)
+        Controller->>DB: Find product by id
+        DB-->>Controller: Product document
+        Controller->>DB: Save updated product
+        DB-->>Controller: Updated product
+        Controller-->>Backend: 200 OK
+        Backend-->>Frontend: Updated Product JSON
+        Frontend-->>Admin: Show updated product
+    end
+    end
+
+    rect rgb(240,240,240)
+    Note over Admin,Frontend: Delete Product
+    Admin->>Frontend: Click delete on a product
+    Frontend->>Backend: DELETE /api/products/:id (Bearer Token)
+    Backend->>Auth: Validate Token
+    Auth-->>Backend: req.user attached
+    Backend->>AdminGuard: Check req.user.isAdmin
+    alt Not admin
+        AdminGuard-->>Frontend: 401 Not authorized as admin
+        Frontend-->>Admin: Show not-authorized message
+    else Admin ok
+        Backend->>Controller: deleteProduct(req, res)
+        Controller->>DB: Find product by id
+        DB-->>Controller: Product document
+        Controller->>DB: deleteOne()
+        DB-->>Controller: Deleted
+        Controller-->>Backend: 200 OK (Product removed)
+        Backend-->>Frontend: Confirmation message
+        Frontend-->>Admin: Remove from list
+    end
+    end

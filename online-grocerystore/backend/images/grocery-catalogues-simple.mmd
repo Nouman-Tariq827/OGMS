@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor Admin
+    participant Frontend
+    participant Backend
+    participant Auth
+    participant Controller
+    participant DB
+
+    Admin->>Frontend: Enter product details
+    Frontend->>Backend: POST /api/products (Bearer)
+    Backend->>Auth: Validate token + admin
+    Auth-->>Backend: Authorized
+    Backend->>Controller: createProduct
+    Controller->>DB: Save product
+    DB-->>Controller: Created product
+    Controller-->>Backend: 201 Created
+    Backend-->>Frontend: Product JSON
+    Frontend-->>Admin: Show in catalogue

@@ -1,0 +1,50 @@
+sequenceDiagram
+    actor Admin as Admin User
+    participant Frontend as Frontend (React)
+    participant Backend as Backend API
+    participant Auth as authMiddleware.protect
+    participant AdminGuard as authMiddleware.admin
+    participant Controller as reportController
+    participant DB as MongoDB
+
+    rect rgb(240,240,240)
+    Note over Admin,Frontend: Generate Sales Report
+    Admin->>Frontend: Select date range and filters
+    Frontend->>Backend: GET /api/reports/sales?from=YYYY-MM-DD&to=YYYY-MM-DD (Bearer)
+    Backend->>Auth: Validate Token
+    Auth-->>Backend: req.user attached
+    Backend->>AdminGuard: Check req.user.isAdmin
+    alt Not admin
+        AdminGuard-->>Frontend: 401 Not authorized as admin
+        Frontend-->>Admin: Show not-authorized message
+    else Admin ok
+        Backend->>Controller: getSalesReport(req, res)
+        Note over Controller,DB: Aggregate orders by day/category\nsum totals, counts, revenue
+        Controller->>DB: Order.aggregate([...])
+        DB-->>Controller: Aggregated metrics
+        Controller-->>Backend: 200 Report JSON
+        Backend-->>Frontend: Report JSON (charts/tables)
+        Frontend-->>Admin: Render sales charts and CSV export
+    end
+    end
+
+    rect rgb(240,240,240)
+    Note over Admin,Frontend: Generate Stock Report
+    Admin->>Frontend: Click "Stock Report"
+    Frontend->>Backend: GET /api/reports/stock (Bearer)
+    Backend->>Auth: Validate Token
+    Auth-->>Backend: req.user attached
+    Backend->>AdminGuard: Check req.user.isAdmin
+    alt Not admin
+        AdminGuard-->>Frontend: 401 Not authorized as admin
+        Frontend-->>Admin: Show not-authorized message
+    else Admin ok
+        Backend->>Controller: getStockReport(req, res)
+        Note over Controller,DB: Query low inventory products\nthreshold from query or default
+        Controller->>DB: Product.find({ countInStock: { $lt: threshold } })
+        DB-->>Controller: Low stock products
+        Controller-->>Backend: 200 Report JSON
+        Backend-->>Frontend: Report JSON (sortable table)
+        Frontend-->>Admin: Render stock table and export
+    end
+    end

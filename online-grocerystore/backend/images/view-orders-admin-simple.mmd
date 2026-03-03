@@ -1,0 +1,11 @@
+sequenceDiagram
+actor Admin
+participant Portal as Admin Portal
+participant OrdersAPI as Orders API
+participant DB as Database
+Admin->>Portal: Open Orders
+Portal->>OrdersAPI: GET /orders
+OrdersAPI->>DB: Fetch orders
+DB-->>OrdersAPI: Order list
+OrdersAPI-->>Portal: Response
+Portal-->>Admin: Show orders

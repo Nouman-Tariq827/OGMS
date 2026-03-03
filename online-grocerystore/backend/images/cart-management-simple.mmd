@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor User
+    participant Frontend
+    participant Backend
+    participant DB
+
+    User->>Frontend: Add item (qty)
+    Frontend->>Backend: GET /api/products/:id
+    Backend->>DB: Find product
+    DB-->>Backend: Product (stock, price)
+    alt In stock
+        Frontend-->>User: Item added to cart
+    else Out of stock
+        Frontend-->>User: Show error
+    end
+
+    User->>Frontend: Update qty / Remove item
+    Frontend-->>User: Cart totals updated

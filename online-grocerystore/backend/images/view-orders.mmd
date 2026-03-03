@@ -1,0 +1,46 @@
+sequenceDiagram
+    actor User
+    participant Frontend as Frontend (React)
+    participant Backend as Backend API
+    participant Auth as authMiddleware.protect
+    participant Controller as orderController
+    participant DB as MongoDB
+
+    rect rgb(240,240,240)
+    Note over User,Frontend: View My Orders (User)
+    User->>Frontend: Navigate to My Orders
+    Frontend->>Backend: GET /api/orders/myorders (Bearer Token)
+    Backend->>Auth: Validate Token
+    alt Token invalid or missing
+        Auth-->>Frontend: 401 Not authorized
+        Frontend-->>User: Show error message
+    else Token valid
+        Auth-->>Backend: req.user attached
+        Backend->>Controller: getMyOrders(req, res)
+        Controller->>DB: Order.find({ user: req.user._id })
+        DB-->>Controller: Orders list
+        Controller-->>Backend: 200 Orders JSON
+        Backend-->>Frontend: Orders JSON
+        Frontend-->>User: Render orders table
+    end
+    end
+
+    rect rgb(240,240,240)
+    Note over User,Frontend: View All Orders (Admin)
+    User->>Frontend: Navigate to Admin Orders
+    Frontend->>Backend: GET /api/orders (Bearer Token)
+    Backend->>Auth: Validate Token
+    Auth-->>Backend: req.user attached
+    Backend->>orderRoutes: admin check
+    alt Not admin
+        orderRoutes-->>Frontend: 401 Not authorized as admin
+        Frontend-->>User: Show not-authorized message
+    else Admin ok
+        Backend->>Controller: getOrders(req, res)
+        Controller->>DB: Order.find({}).populate('user', 'id name')
+        DB-->>Controller: Orders list
+        Controller-->>Backend: 200 Orders JSON
+        Backend-->>Frontend: Orders JSON
+        Frontend-->>User: Render admin orders table
+    end
+    end

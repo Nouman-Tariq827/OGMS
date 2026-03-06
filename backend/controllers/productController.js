@@ -5,7 +5,7 @@ import Product from '../models/productModel.js'
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 10 // Number of products to show per page
+  const pageSize = 12 // Number of products to show per page (12 = 3 rows of 4 cards)
   const page = Number(req.query.pageNumber) || 1 // Current page number from URL
 
   // Check if there is a search 'keyword' in the URL

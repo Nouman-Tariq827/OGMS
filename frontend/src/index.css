@@ -360,6 +360,7 @@ h2 {
   margin: 0 2px !important;
   border-radius: 8px !important;
   transition: all 0.3s ease !important;
+  font-weight: 500;
 }
 
 .page-link:hover {
@@ -369,8 +370,8 @@ h2 {
 }
 
 .page-item.active .page-link {
-  background-color: #28a745 !important;
-  border-color: #28a745 !important;
+  background-color: #85d698 !important;
+  border-color: #e7f6df !important;
 }
 
 .product-title {

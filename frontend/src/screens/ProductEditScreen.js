@@ -22,7 +22,6 @@ const ProductEditScreen = ({ match, history, location }) => {
   const [countInStock, setCountInStock] = useState(0)
   const [description, setDescription] = useState('')
   const [uploading, setUploading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState('')
 
   const dispatch = useDispatch()
 
@@ -47,18 +46,12 @@ const ProductEditScreen = ({ match, history, location }) => {
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET })
-      setSuccessMessage('Product has been updated successfully.')
-      setTimeout(() => {
-        setSuccessMessage('')
-        history.push(`/admin/productlist/page/${returnUrl}`)
-      }, 2000) // Stay on page for 2 seconds before redirecting
+      alert('Product has been updated successfully.')
+      // No automatic redirect - user stays on update page
     } else if (successCreate) {
       dispatch({ type: PRODUCT_CREATE_RESET })
-      setSuccessMessage('Product has been created successfully.')
-      setTimeout(() => {
-        setSuccessMessage('')
-        history.push('/admin/productlist')
-      }, 2000) // Stay on page for 2 seconds before redirecting
+      alert('Product has been created successfully.')
+      // No automatic redirect - user stays on create page
     } else {
       if (productId && (!product.name || product._id !== productId)) {
         dispatch(listProductDetails(productId))
@@ -130,12 +123,11 @@ const ProductEditScreen = ({ match, history, location }) => {
 
   return (
     <>
-      <Link to='/admin/productlist' className='btn btn-light my-3'>
-        Go Back
+      <Link to={`/admin/productlist/page/${returnUrl}`} className='btn btn-light my-3'>
+        Go Back to Products
       </Link>
       <FormContainer>
         <h1>{productId ? 'Edit Product' : 'Create Product'}</h1>
-        {successMessage && <Message variant='success'>{successMessage}</Message>}
         {loadingUpdate && <Loader />}
         {loadingCreate && <Loader />}
         {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}

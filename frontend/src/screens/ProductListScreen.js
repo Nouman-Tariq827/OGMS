@@ -70,7 +70,7 @@ const ProductListScreen = ({ history, match, location }) => {
   }
 
   const createProductHandler = () => {
-    history.push('/admin/product/create')
+    history.push(`/admin/product/create?page=${pageNumber}`)
   }
 
   return (
@@ -93,7 +93,7 @@ const ProductListScreen = ({ history, match, location }) => {
           <Message variant='danger'>{error}</Message>
         ) : (
           <>
-            <Table striped bordered hover responsive className='table-sm'>
+            <Table striped bordered hover responsive className='table-sm' key='product-table'>
               <thead>
                 <tr>
                   <th>ID</th>

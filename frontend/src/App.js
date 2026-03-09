@@ -28,15 +28,6 @@ import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
 import ResetPasswordScreen from './screens/ResetPasswordScreen'
 
 const App = () => {
-  // Clear stale authentication data on fresh app start
-  useEffect(() => {
-    // Only clear if this is a fresh page load (not a refresh)
-    if (!sessionStorage.getItem('appInitialized')) {
-      localStorage.removeItem('userInfo')
-      sessionStorage.setItem('appInitialized', 'true')
-    }
-  }, [])
-
   return (
     <Router>
       <Header />

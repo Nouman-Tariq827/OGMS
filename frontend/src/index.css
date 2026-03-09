@@ -370,8 +370,77 @@ h2 {
 }
 
 .page-item.active .page-link {
-  background-color: #85d698 !important;
-  border-color: #e7f6df !important;
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+}
+
+/* Admin Product List Styling */
+.admin-product-list {
+  margin-top: 2rem;
+}
+
+.admin-product-list .table {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.admin-product-list .table th {
+  background-color: #28a745;
+  color: white;
+  font-weight: 600;
+  border: none;
+}
+
+.admin-product-list .table td {
+  vertical-align: middle;
+  border-color: #f1f3f5;
+}
+
+.admin-product-list .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+}
+
+.admin-product-list .page-info {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.admin-product-list .page-info h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.admin-product-list .page-info .current-page {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffc107;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/* Category Card Styling */
+.category-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none !important;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+  text-decoration: none !important;
+}
+
+.category-card:hover .card-title {
+  color: #28a745 !important;
 }
 
 .product-title {

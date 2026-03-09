@@ -22,6 +22,7 @@ import AdminDashboardScreen from './screens/AdminDashboardScreen'
 import UserDashboardScreen from './screens/UserDashboardScreen'
 import AboutScreen from './screens/AboutScreen'
 import CategoryScreen from './screens/CategoryScreen'
+import CategoryProductsScreen from './screens/CategoryProductsScreen'
 import ContactScreen from './screens/ContactScreen'
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
 import ResetPasswordScreen from './screens/ResetPasswordScreen'
@@ -58,6 +59,10 @@ const App = () => {
           />
           <Route path='/about' component={AboutScreen} />
           <Route path='/category' component={CategoryScreen} />
+          <Route path='/category/:categoryName' component={CategoryProductsScreen} exact />
+          <Route path='/category/:categoryName/page/:pageNumber' component={CategoryProductsScreen} />
+          <Route path='/admin/product/create' component={ProductEditScreen} />
+          <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
           <Route path='/contact' component={ContactScreen} />
           <Route path='/product/:id' component={ProductScreen} />
           <Route path='/cart/:id?' component={CartScreen} />
@@ -73,7 +78,6 @@ const App = () => {
             component={ProductListScreen}
             exact
           />
-          <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
           <Route path='/admin/orderlist' component={OrderListScreen} />
           <Route path='/admin/dashboard' component={AdminDashboardScreen} />
           <Route path='/search/:keyword' component={HomeScreen} exact />

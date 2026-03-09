@@ -8,11 +8,27 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Product from '../components/Product'
 import Paginate from '../components/Paginate'
+import { Link } from 'react-router-dom'
 
 const UserDashboardScreen = ({ history, match }) => {
   // 1. Get current page number for the product list
   const pageNumber = match.params.pageNumber || 1
   const dispatch = useDispatch()
+
+  // Categories for user dashboard
+  const categories = [
+    { name: 'Hair Care', icon: 'fas fa-cut' },
+    { name: 'Skin Care', icon: 'fas fa-hand-sparkles' },
+    { name: 'Tea and Coffee', icon: 'fas fa-coffee' },
+    { name: 'House Cleaning', icon: 'fas fa-broom' },
+    { name: 'Dairy', icon: 'fas fa-cheese' },
+    { name: 'Snacks & Beverages', icon: 'fas fa-cookie' },
+    { name: 'Oil and Ghee', icon: 'fas fa-oil-can' },
+    { name: 'Fruits and Vegetables', icon: 'fas fa-apple-alt' },
+    { name: 'Meat', icon: 'fas fa-drumstick-bite' },
+    { name: 'Pulses and Beans', icon: 'fas fa-seedling' },
+    { name: 'Toothpaste', icon: 'fas fa-tooth' },
+  ]
 
   // 2. Access logged-in user info from the global state
   const userLogin = useSelector((state) => state.userLogin)
@@ -93,6 +109,28 @@ const UserDashboardScreen = ({ history, match }) => {
           </Card>
         </Col>
       </Row>
+
+      {/* Categories Section */}
+      <section className='mb-5'>
+        <h3>Shop by Category</h3>
+        <Row>
+          {categories.map((category, index) => (
+            <Col key={index} sm={12} md={6} lg={4} className='mb-3'>
+              <Link to={`/category/${category.name}`} className='text-decoration-none'>
+                <Card className='text-center shadow-sm h-100 category-card'>
+                  <Card.Body>
+                    <i
+                      className={category.icon}
+                      style={{ fontSize: '3rem', color: '#007bff' }}
+                    ></i>
+                    <Card.Title className='mt-3'>{category.name}</Card.Title>
+                  </Card.Body>
+                </Card>
+              </Link>
+            </Col>
+          ))}
+        </Row>
+      </section>
 
       {/* Dashboard Bottom Section: Product List */}
       <section className='mb-5'>

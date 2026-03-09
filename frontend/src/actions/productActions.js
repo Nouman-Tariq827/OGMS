@@ -24,15 +24,28 @@ import {
 } from '../constants/productConstants'
 import { logout } from './userActions'
 
-export const listProducts = (keyword = '', pageNumber = '') => async (
+export const listProducts = (keyword = '', pageNumber = '', category = '') => async (
   dispatch
 ) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST })
 
-    const { data } = await axios.get(
-      `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
-    )
+    // Build API URL based on what parameters are provided
+    let apiUrl = `/api/products?`
+    
+    if (keyword) {
+      apiUrl += `keyword=${keyword}&`
+    }
+    
+    if (category) {
+      apiUrl += `category=${category}&`
+    }
+    
+    if (pageNumber) {
+      apiUrl += `pageNumber=${pageNumber}`
+    }
+
+    const { data } = await axios.get(apiUrl)
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,

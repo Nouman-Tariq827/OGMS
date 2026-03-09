@@ -6,11 +6,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
-import { listProductDetails, updateProduct } from '../actions/productActions'
-import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
+import { listProductDetails, updateProduct, createProduct } from '../actions/productActions'
+import { PRODUCT_UPDATE_RESET, PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
-const ProductEditScreen = ({ match, history }) => {
+const ProductEditScreen = ({ match, history, location }) => {
   const productId = match.params.id
+  const params = new URLSearchParams(location.search)
+  const returnUrl = params.get('page') || 1
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState(0)
@@ -20,6 +22,7 @@ const ProductEditScreen = ({ match, history }) => {
   const [countInStock, setCountInStock] = useState(0)
   const [description, setDescription] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
 
   const dispatch = useDispatch()
 
@@ -33,14 +36,33 @@ const ProductEditScreen = ({ match, history }) => {
     success: successUpdate,
   } = productUpdate
 
+  const productCreate = useSelector((state) => state.productCreate)
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    product: createdProduct,
+  } = productCreate
+
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET })
-      history.push('/admin/productlist')
+      setSuccessMessage('Product has been updated successfully.')
+      setTimeout(() => {
+        setSuccessMessage('')
+        history.push(`/admin/productlist/page/${returnUrl}`)
+      }, 2000) // Stay on page for 2 seconds before redirecting
+    } else if (successCreate) {
+      dispatch({ type: PRODUCT_CREATE_RESET })
+      setSuccessMessage('Product has been created successfully.')
+      setTimeout(() => {
+        setSuccessMessage('')
+        history.push('/admin/productlist')
+      }, 2000) // Stay on page for 2 seconds before redirecting
     } else {
-      if (!product.name || product._id !== productId) {
+      if (productId && (!product.name || product._id !== productId)) {
         dispatch(listProductDetails(productId))
-      } else {
+      } else if (product.name) {
         setName(product.name)
         setPrice(product.price)
         setImage(product.image)
@@ -50,7 +72,7 @@ const ProductEditScreen = ({ match, history }) => {
         setDescription(product.description)
       }
     }
-  }, [dispatch, history, productId, product, successUpdate])
+  }, [dispatch, history, productId, product, successUpdate, successCreate])
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0]
@@ -76,18 +98,34 @@ const ProductEditScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault()
-    dispatch(
-      updateProduct({
-        _id: productId,
-        name,
-        price,
-        image,
-        brand,
-        category,
-        description,
-        countInStock,
-      })
-    )
+    if (productId) {
+      // Update existing product
+      dispatch(
+        updateProduct({
+          _id: productId,
+          name,
+          price,
+          image,
+          brand,
+          category,
+          description,
+          countInStock,
+        })
+      )
+    } else {
+      // Create new product
+      dispatch(
+        createProduct({
+          name,
+          price,
+          image,
+          brand,
+          category,
+          description,
+          countInStock,
+        })
+      )
+    }
   }
 
   return (
@@ -96,9 +134,12 @@ const ProductEditScreen = ({ match, history }) => {
         Go Back
       </Link>
       <FormContainer>
-        <h1>Edit Product</h1>
+        <h1>{productId ? 'Edit Product' : 'Create Product'}</h1>
+        {successMessage && <Message variant='success'>{successMessage}</Message>}
         {loadingUpdate && <Loader />}
+        {loadingCreate && <Loader />}
         {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
+        {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
         {loading ? (
           <Loader />
         ) : error ? (
@@ -165,11 +206,23 @@ const ProductEditScreen = ({ match, history }) => {
             <Form.Group controlId='category'>
               <Form.Label>Category</Form.Label>
               <Form.Control
-                type='text'
-                placeholder='Enter category'
+                as='select'
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-              ></Form.Control>
+              >
+                <option value=''>Select a category...</option>
+                <option value='Hair Care'>Hair Care</option>
+                <option value='Skin Care'>Skin Care</option>
+                <option value='Tea and Coffee'>Tea and Coffee</option>
+                <option value='House Cleaning'>House Cleaning</option>
+                <option value='Dairy'>Dairy</option>
+                <option value='Snacks & Beverages'>Snacks & Beverages</option>
+                <option value='Oil and Ghee'>Oil and Ghee</option>
+                <option value='Fruits and Vegetables'>Fruits and Vegetables</option>
+                <option value='Meat'>Meat</option>
+                <option value='Pulses and Beans'>Pulses and Beans</option>
+                <option value='Toothpaste'>Toothpaste</option>
+              </Form.Control>
             </Form.Group>
 
             <Form.Group controlId='description'>
@@ -183,7 +236,7 @@ const ProductEditScreen = ({ match, history }) => {
             </Form.Group>
 
             <Button type='submit' variant='primary'>
-              Update
+              {productId ? 'Update' : 'Create'}
             </Button>
           </Form>
         )}

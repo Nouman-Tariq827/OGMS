@@ -8,21 +8,29 @@ const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 12 // Number of products to show per page (12 = 3 rows of 4 cards)
   const page = Number(req.query.pageNumber) || 1 // Current page number from URL
 
+  // Build search filter
+  let searchFilter = {}
+  
   // Check if there is a search 'keyword' in the URL
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword, // Use regular expression for searching
-          $options: 'i', // 'i' means case-insensitive
-        },
-      }
-    : {}
+  if (req.query.keyword) {
+    searchFilter.name = {
+      $regex: req.query.keyword, // Use regular expression for searching
+      $options: 'i', // 'i' means case-insensitive
+    }
+  }
+  
+  // Check if there is a category filter in the URL
+  if (req.query.category) {
+    searchFilter.category = req.query.category // Filter by exact category name
+  }
 
-  // 1. Count total number of products matching the keyword
-  const count = await Product.countDocuments({ ...keyword })
+  console.log('Search filter:', searchFilter) // Debug log
 
-  // 2. Fetch products based on search keyword and current page (pagination)
-  const products = await Product.find({ ...keyword })
+  // 1. Count total number of products matching the filter
+  const count = await Product.countDocuments(searchFilter)
+
+  // 2. Fetch products based on filter and current page (pagination)
+  const products = await Product.find(searchFilter)
     .limit(pageSize)
     .skip(pageSize * (page - 1))
 
@@ -62,21 +70,32 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Create a sample product (Admin only)
+// @desc    Create a new product (Admin only)
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-  // Create a placeholder product with sample data
+  // Get product data from the request body
+  const {
+    name,
+    price,
+    description,
+    image,
+    brand,
+    category,
+    countInStock,
+  } = req.body
+
+  // Create a new product with the provided data
   const product = new Product({
-    name: 'New Product Name',
-    price: 0,
+    name: name || 'Sample Product',
+    price: price || 0,
     user: req.user._id, // Assign to the logged-in admin
-    image: '/uploads/sample.jpg',
-    brand: 'Grocery Brand',
-    category: 'Food',
-    countInStock: 0,
+    image: image || '/uploads/sample.jpg',
+    brand: brand || 'Grocery Brand',
+    category: category || 'Food',
+    countInStock: countInStock || 0,
     numReviews: 0,
-    description: 'Enter product description here...',
+    description: description || 'Enter product description here...',
   })
 
   // Save the new product to the database

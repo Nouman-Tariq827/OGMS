@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Row, Col, Card, Button, Nav } from 'react-bootstrap'
+import { Row, Col, Card, Button } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
 import { listUsers } from '../actions/userActions'
 import { listOrders } from '../actions/orderActions'
 import { listProducts } from '../actions/productActions'
-import { LinkContainer } from 'react-router-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import axios from 'axios'
 
 const AdminDashboardScreen = ({ history }) => {
   const dispatch = useDispatch()
+  const [totalProductCount, setTotalProductCount] = useState(0)
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
@@ -18,24 +20,58 @@ const AdminDashboardScreen = ({ history }) => {
   const { loading: loadingOrders, error: errorOrders, orders } = orderList
 
   const productList = useSelector((state) => state.productList)
-  const { loading: loadingProducts, error: errorProducts, products } = productList
+  const { loading: loadingProducts, error: errorProducts, products, page, pages } = productList
 
   const userList = useSelector((state) => state.userList)
   const { loading: loadingUsers, error: errorUsers, users } = userList
 
+  // Manual refresh function
+  const refreshDashboard = () => {
+    dispatch(listUsers())
+    dispatch(listOrders())
+    dispatch(listProducts('', 1))
+    fetchTotalProductCount()
+  }
+
+  // Fetch total product count from backend
+  const fetchTotalProductCount = async () => {
+    try {
+      // The backend uses pageSize = 12, so we can calculate total count
+      if (pages && products) {
+        // If we're on the last page, we have the exact count
+        if (page === pages) {
+          setTotalProductCount((pages - 1) * 12 + products.length)
+        } else {
+          // If not on last page, we need to fetch the last page
+          const { data } = await axios.get(`/api/products?pageNumber=${pages}`)
+          setTotalProductCount((pages - 1) * 12 + data.products.length)
+        }
+      } else {
+        setTotalProductCount(0)
+      }
+    } catch (error) {
+      console.error('Error fetching total product count:', error)
+      setTotalProductCount(0)
+    }
+  }
+
+  // Auto-refresh when component mounts or user returns to dashboard
   useEffect(() => {
     if (!userInfo || !userInfo.isAdmin) {
       history.push('/login')
     } else {
-      dispatch(listUsers())
-      dispatch(listOrders())
-      dispatch(listProducts('', 1))
+      refreshDashboard()
     }
   }, [dispatch, history, userInfo])
 
   return (
     <>
-      <h1 className='mb-4'><i className='fas fa-user-shield mr-2'></i> Admin Dashboard</h1>
+      <div className='d-flex justify-content-between align-items-center mb-4'>
+        <h1 className='mb-0'><i className='fas fa-user-shield mr-2'></i> Admin Dashboard</h1>
+        <Button variant='outline-primary' onClick={refreshDashboard}>
+          <i className='fas fa-sync-alt mr-2'></i> Refresh Dashboard
+        </Button>
+      </div>
 
       <Row>
         <Col md={4} className='mb-3'>
@@ -48,8 +84,8 @@ const AdminDashboardScreen = ({ history }) => {
                 <Message variant='danger'>{errorUsers}</Message>
               ) : (
                 <Card.Text>
-                  Manage registered users and permissions
-                  {users ? ` (${users.length})` : ''}
+                  Manage user accounts and permissions
+                  {users ? ` (${users.length} users)` : ''}
                 </Card.Text>
               )}
               <LinkContainer to='/admin/userlist'>
@@ -70,7 +106,7 @@ const AdminDashboardScreen = ({ history }) => {
               ) : (
                 <Card.Text>
                   Manage store catalogue and inventory
-                  {products ? ` (${products.length} items)` : ''}
+                  {` (${totalProductCount} total items)`}
                 </Card.Text>
               )}
               <LinkContainer to='/admin/productlist'>
@@ -91,11 +127,11 @@ const AdminDashboardScreen = ({ history }) => {
               ) : (
                 <Card.Text>
                   Review and fulfill customer orders
-                  {orders ? ` (${orders.length})` : ''}
+                  {orders ? ` (${orders.length} orders)` : ''}
                 </Card.Text>
               )}
               <LinkContainer to='/admin/orderlist'>
-                <Button variant='warning'>Go to Orders</Button>
+                <Button variant='info'>Go to Orders</Button>
               </LinkContainer>
             </Card.Body>
           </Card>

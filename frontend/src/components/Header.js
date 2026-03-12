@@ -142,7 +142,6 @@ const Header = () => {
                   <NavDropdown 
                     title="Categories"
                     id='categories-dropdown'
-                    className='nav-item-link'
                     show={isDropdownOpen}
                     onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
                   >

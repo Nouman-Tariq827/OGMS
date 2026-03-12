@@ -1,6 +1,5 @@
 import React from 'react'
-import { Carousel, Button } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
+import { Carousel } from 'react-bootstrap'
 
 const HeroSlider = () => {
   const sliders = [

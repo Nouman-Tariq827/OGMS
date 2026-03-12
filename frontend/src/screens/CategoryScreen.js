@@ -1,42 +1,49 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { Container, Row, Col, Card } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { listProducts } from '../actions/productActions'
+import Product from '../components/Product'
+import Loader from '../components/Loader'
+import Message from '../components/Message'
 
 const CategoryScreen = () => {
-  const categories = [
-    { name: 'Hair Care', icon: 'fas fa-cut' },
-    { name: 'Skin Care', icon: 'fas fa-hand-sparkles' },
-    { name: 'Tea and Coffee', icon: 'fas fa-coffee' },
-    { name: 'House Cleaning', icon: 'fas fa-broom' },
-    { name: 'Dairy', icon: 'fas fa-cheese' },
-    { name: 'Snacks & Beverages', icon: 'fas fa-cookie' },
-    { name: 'Oil and Ghee', icon: 'fas fa-oil-can' },
-    { name: 'Fruits and Vegetables', icon: 'fas fa-apple-alt' },
-    { name: 'Meat', icon: 'fas fa-drumstick-bite' },
-    { name: 'Pulses and Beans', icon: 'fas fa-seedling' },
-    { name: 'Toothpaste', icon: 'fas fa-tooth' },
-  ]
+  const { category } = useParams()
+  const dispatch = useDispatch()
+  
+  const productList = useSelector((state) => state.productList)
+  const { loading, error, products } = productList
+
+  useEffect(() => {
+    if (category) {
+      dispatch(listProducts('', 1, category))
+    }
+  }, [dispatch, category])
 
   return (
     <Container>
-      <h1>Categories</h1>
-      <Row>
-        {categories.map((category, index) => (
-          <Col key={index} sm={12} md={6} lg={4} className='mb-3'>
-            <Link to={`/category/${category.name}`} className='text-decoration-none'>
-              <Card className='text-center shadow-sm h-100 category-card'>
-                <Card.Body>
-                  <i
-                    className={category.icon}
-                    style={{ fontSize: '3rem', color: '#007bff' }}
-                  ></i>
-                  <Card.Title className='mt-3'>{category.name}</Card.Title>
-                </Card.Body>
-              </Card>
-            </Link>
-          </Col>
-        ))}
-      </Row>
+      {category ? (
+        <>
+          <h1>{category} Products</h1>
+          {loading ? (
+            <Loader />
+          ) : error ? (
+            <Message variant='danger'>{error}</Message>
+          ) : products.length > 0 ? (
+            <Row>
+              {products.map((product) => (
+                <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                  <Product product={product} />
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <Message>No products found in this category.</Message>
+          )}
+        </>
+      ) : (
+        <Message>Please select a category from the dropdown to view products.</Message>
+      )}
     </Container>
   )
 }

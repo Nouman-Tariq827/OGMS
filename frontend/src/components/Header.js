@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { LinkContainer } from 'react-router-bootstrap'
@@ -6,14 +6,34 @@ import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import SearchBox from './SearchBox'
 import { logout } from '../actions/userActions'
 
+const categories = [
+  'Hair Care',
+  'Skin Care', 
+  'Tea and Coffee',
+  'House Cleaning',
+  'Dairy',
+  'Snacks & Beverages',
+  'Oil and Ghee',
+  'Fruits and Vegetables',
+  'Meat',
+  'Pulses and Beans',
+  'Toothpaste'
+]
+
 const Header = () => {
   const dispatch = useDispatch()
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
   const logoutHandler = () => {
     dispatch(logout())
+  }
+
+  const handleCategoryClick = (category) => {
+    // Navigate to category products page
+    window.location.href = `/category/${category}`
   }
 
   return (
@@ -119,9 +139,22 @@ const Header = () => {
                   <LinkContainer to='/' exact>
                 <Nav.Link className='nav-item-link'>Home</Nav.Link>
               </LinkContainer>
-                  <LinkContainer to='/category'>
-                    <Nav.Link className='nav-item-link'>Category</Nav.Link>
-                  </LinkContainer>
+                  <NavDropdown 
+                    title="Categories"
+                    id='categories-dropdown'
+                    className='nav-item-link'
+                    show={isDropdownOpen}
+                    onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    {categories.map((category, index) => (
+                      <NavDropdown.Item 
+                        key={index}
+                        onClick={() => handleCategoryClick(category)}
+                      >
+                        {category}
+                      </NavDropdown.Item>
+                    ))}
+                  </NavDropdown>
                   <LinkContainer to='/about'>
                     <Nav.Link className='nav-item-link'>About Us</Nav.Link>
                   </LinkContainer>

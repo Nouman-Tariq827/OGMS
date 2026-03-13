@@ -114,7 +114,7 @@ const ProductListScreen = ({ history, match, location }) => {
                     <td>{product.brand}</td>
                     <td>
                       <LinkContainer to={`/admin/product/${product._id}/edit?page=${pageNumber}`}>
-                        <Button variant='light' className='btn-sm'>
+                        <Button variant='light' className='btn-sm mr-2'>
                           <i className='fas fa-edit'></i>
                         </Button>
                       </LinkContainer>

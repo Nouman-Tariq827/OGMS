@@ -15,6 +15,7 @@ import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
 } from '../constants/orderConstants'
+import { getPaymentMethodDisplayName, shouldShowPayPalButton } from '../config/paymentMethods'
 
 const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id
@@ -122,9 +123,14 @@ const OrderScreen = ({ match, history }) => {
               <h2>Payment Method</h2>
               <p>
                 <strong>Method: </strong>
-                {order.paymentMethod}
+                {getPaymentMethodDisplayName(order.paymentMethod)}
               </p>
-              {order.isPaid ? (
+              {order.paymentMethod === 'COD' ? (
+                <Message variant='info'>
+                  <i className="fas fa-money-bill-wave mr-2"></i>
+                  Payment will be collected upon delivery
+                </Message>
+              ) : order.isPaid ? (
                 <Message variant='success'>Paid on {order.paidAt}</Message>
               ) : (
                 <Message variant='danger'>Not Paid</Message>
@@ -194,7 +200,7 @@ const OrderScreen = ({ match, history }) => {
                   <Col>Rs {order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              {!order.isPaid && (
+              {!order.isPaid && shouldShowPayPalButton(order.paymentMethod) && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
                   {!sdkReady ? (
@@ -210,7 +216,6 @@ const OrderScreen = ({ match, history }) => {
               {loadingDeliver && <Loader />}
               {userInfo &&
                 userInfo.isAdmin &&
-                order.isPaid &&
                 !order.isDelivered && (
                   <ListGroup.Item>
                     <Button
@@ -220,6 +225,12 @@ const OrderScreen = ({ match, history }) => {
                     >
                       Mark As Delivered
                     </Button>
+                    {order.paymentMethod === 'COD' && (
+                      <small className="text-muted d-block mt-2">
+                        <i className="fas fa-info-circle mr-1"></i>
+                        COD order will be marked as paid when delivered
+                      </small>
+                    )}
                   </ListGroup.Item>
                 )}
             </ListGroup>

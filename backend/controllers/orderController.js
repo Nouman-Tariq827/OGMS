@@ -88,6 +88,18 @@ const updateOrderToDelivered = async (req, res) => {
   if (order) {
     order.isDelivered = true
     order.deliveredAt = Date.now()
+    
+    // For COD orders, mark as paid when delivered
+    if (order.paymentMethod === 'COD') {
+      order.isPaid = true
+      order.paidAt = Date.now()
+      order.paymentResult = {
+        id: `COD-${order._id}`,
+        status: 'COMPLETED',
+        update_time: new Date().toISOString(),
+        email_address: order.user.email,
+      }
+    }
 
     const updatedOrder = await order.save()
 

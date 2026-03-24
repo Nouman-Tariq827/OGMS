@@ -5,9 +5,10 @@ import {
   CART_SAVE_PAYMENT_METHOD,
   CART_CLEAR_ITEMS,
 } from '../constants/cartConstants'
+import { getDefaultPaymentMethod } from '../config/paymentMethods'
 
 export const cartReducer = (
-  state = { cartItems: [], shippingAddress: {} },
+  state = { cartItems: [], shippingAddress: {}, paymentMethod: getDefaultPaymentMethod() },
   action
 ) => {
   switch (action.type) {

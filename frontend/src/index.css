@@ -315,6 +315,85 @@ h2 {
   margin-bottom: 2.5rem;
 }
 
+/* Enhanced Carousel Controls */
+.hero-slider .carousel-control-prev,
+.hero-slider .carousel-control-next {
+  width: 36px;
+  height: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(40, 167, 69, 0.2) !important;
+  border-radius: 6px !important;
+  margin: 0 25px !important;
+  box-shadow: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: none;
+}
+
+.hero-slider .carousel-control-prev {
+  left: 25px;
+}
+
+.hero-slider .carousel-control-next {
+  right: 25px;
+}
+
+.hero-slider:hover .carousel-control-prev,
+.hero-slider:hover .carousel-control-next {
+  opacity: 1;
+  background: rgba(40, 167, 69, 0.9) !important;
+  transform: translateY(-50%) scale(1.05);
+}
+
+.hero-slider .carousel-control-prev-icon,
+.hero-slider .carousel-control-next-icon {
+  width: 14px;
+  height: 14px;
+  background-size: 12px 12px;
+  filter: none;
+  transition: transform 0.2s ease;
+  color: #28a745;
+}
+
+.hero-slider .carousel-control-prev:hover .carousel-control-prev-icon,
+.hero-slider .carousel-control-next:hover .carousel-control-next-icon {
+  transform: translateX(1px);
+}
+
+.hero-slider .carousel-control-prev:hover {
+  transform: translateY(-50%) translateX(-2px) scale(1.05);
+}
+
+.hero-slider .carousel-control-next:hover {
+  transform: translateY(-50%) translateX(2px) scale(1.05);
+}
+
+/* Carousel Indicators */
+.hero-slider .carousel-indicators {
+  bottom: 30px;
+}
+
+.hero-slider .carousel-indicators li {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin: 0 10px;
+  border: 2px solid #fff;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.hero-slider .carousel-indicators .active {
+  background-color: #28a745;
+  border-color: #28a745;
+  transform: scale(1.1);
+}
+
 /* BUTTONS */
 
 .btn {

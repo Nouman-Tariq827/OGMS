@@ -40,11 +40,6 @@ app.use('/api/users', userRoutes) // Routes for user authentication and profile
 app.use('/api/orders', orderRoutes) // Routes for managing orders
 app.use('/api/upload', uploadRoutes) // Routes for uploading product images
 
-// PayPal configuration for payment processing
-app.get('/api/config/paypal', (req, res) =>
-  res.send(process.env.PAYPAL_CLIENT_ID)
-)
-
 // Handle file uploads (making the 'uploads' folder public)
 const rootDir = path.resolve()
 const uploadDir = rootDir.endsWith('backend') 

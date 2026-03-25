@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
+import { Button, Row, Col, ListGroup, Image, Card, Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
+import Loader from '../components/Loader'
 import CheckoutSteps from '../components/CheckoutSteps'
 import { createOrder } from '../actions/orderActions'
 import { ORDER_CREATE_RESET } from '../constants/orderConstants'
+import { getPaymentMethodDisplayName } from '../config/paymentMethods'
 
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch()
+  const [showModal, setShowModal] = useState(false)
 
   const cart = useSelector((state) => state.cart)
 
@@ -30,15 +33,19 @@ const PlaceOrderScreen = ({ history }) => {
   ).toFixed(2)
 
   const orderCreate = useSelector((state) => state.orderCreate)
-  const { order, success, error } = orderCreate
+  const { order, success, error, loading } = orderCreate
 
   useEffect(() => {
-    if (success) {
-      history.push(`/order/${order._id}`)
-      dispatch({ type: ORDER_CREATE_RESET })
+    if (success && order) {
+      setShowModal(true)
+      // Auto-redirect after 5 seconds
+      setTimeout(() => {
+        history.push(`/order/${order._id}`)
+        dispatch({ type: ORDER_CREATE_RESET })
+      }, 5000)
     }
     // eslint-disable-next-line
-  }, [history, success])
+  }, [history, success, order, dispatch])
 
   const placeOrderHandler = () => {
     dispatch(
@@ -52,6 +59,14 @@ const PlaceOrderScreen = ({ history }) => {
         totalPrice: cart.totalPrice,
       })
     )
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    if (order) {
+      history.push(`/order/${order._id}`)
+      dispatch({ type: ORDER_CREATE_RESET })
+    }
   }
 
   return (
@@ -73,7 +88,7 @@ const PlaceOrderScreen = ({ history }) => {
             <ListGroup.Item>
               <h2>Payment Method</h2>
               <strong>Method: </strong>
-              {cart.paymentMethod}
+              {getPaymentMethodDisplayName(cart.paymentMethod)}
             </ListGroup.Item>
 
             <ListGroup.Item>
@@ -146,16 +161,85 @@ const PlaceOrderScreen = ({ history }) => {
                 <Button
                   type='button'
                   className='btn-block'
-                  disabled={cart.cartItems === 0}
+                  disabled={cart.cartItems === 0 || loading}
                   onClick={placeOrderHandler}
                 >
-                  Place Order
+                  {loading ? <Loader /> : 'Place Order'}
                 </Button>
               </ListGroup.Item>
             </ListGroup>
           </Card>
         </Col>
       </Row>
+
+      {/* Order Confirmation Modal */}
+      <Modal show={showModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="text-success">
+            <i className="fas fa-check-circle mr-2"></i>
+            Order Placed Successfully!
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="text-center">
+            <div className="mb-4">
+              <i className="fas fa-shopping-cart fa-3x text-success mb-3"></i>
+              <h4>Thank you for your order!</h4>
+            </div>
+            
+            {order && (
+              <Card className="text-left mb-3">
+                <Card.Body>
+                  <h6 className="mb-3">
+                    <i className="fas fa-receipt mr-2"></i>
+                    Order Details
+                  </h6>
+                  <Row className="mb-2">
+                    <Col sm={6}><strong>Order ID:</strong></Col>
+                    <Col sm={6}>{order._id}</Col>
+                  </Row>
+                  <Row className="mb-2">
+                    <Col sm={6}><strong>Total Amount:</strong></Col>
+                    <Col sm={6}>Rs {order.totalPrice}</Col>
+                  </Row>
+                  <Row className="mb-2">
+                    <Col sm={6}><strong>Payment Method:</strong></Col>
+                    <Col sm={6}>{getPaymentMethodDisplayName(order.paymentMethod)}</Col>
+                  </Row>
+                  <Row className="mb-2">
+                    <Col sm={6}><strong>Status:</strong></Col>
+                    <Col sm={6}>
+                      <span className="badge badge-info">
+                        <i className="fas fa-clock mr-1"></i>
+                        Processing
+                      </span>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            )}
+
+            {order && order.paymentMethod === 'COD' && (
+              <Message variant="info">
+                <i className="fas fa-money-bill-wave mr-2"></i>
+                <strong>Cash on Delivery:</strong> Please pay Rs {order.totalPrice} when your order arrives.
+              </Message>
+            )}
+
+            <p className="text-muted mb-0">
+              <small>
+                <i className="fas fa-info-circle mr-1"></i>
+                You will be redirected to your order details page in 5 seconds...
+              </small>
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleCloseModal}>
+            View Order Details
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

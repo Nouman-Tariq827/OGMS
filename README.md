@@ -8,14 +8,12 @@
 
 A modern, feature-rich e-commerce platform for online grocery shopping built with the MERN stack. This application provides a complete shopping experience with advanced features including product search, category-based navigation, user reviews, shopping cart, multiple payment methods, and comprehensive admin panel.
 
-## 🌟 Live Demo
 
-**Check Live Demo:** [https://your-app-domain.com](https://your-app-domain.com)
 
 ### Quick Access
-- **Admin Login:** `admin@example.com` / `Admin@123`
-- **User Login:** `user@example.com` / `User@123`
-- **Test Payment:** Use Cash on Delivery (COD) for testing
+- **Admin Login:** `admin@example.com` / `123456`
+- **User Login:** `zrar@gmail.com` / `123456`
+- **Payment:** Cash on Delivery (COD) - Pay when you receive your order
 
 ## ✨ Key Features
 
@@ -26,7 +24,7 @@ A modern, feature-rich e-commerce platform for online grocery shopping built wit
 - **Shopping Cart:** Add/remove items with quantity management
 - **User Reviews:** Rate and review purchased products
 - **Order Tracking:** View order history and status
-- **Multiple Payment Methods:** Cash on Delivery (COD), PayPal, ready for JazzCash/Easypaisa
+- **Multiple Payment Methods:** Cash on Delivery (COD) as primary, ready for JazzCash/Easypaisa
 - **Responsive Design:** Mobile-first responsive UI
 
 ### 👨‍💼 Admin Features
@@ -102,7 +100,6 @@ A modern, feature-rich e-commerce platform for online grocery shopping built wit
    PORT=5000
    MONGO_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret_key
-   PAYPAL_CLIENT_ID=your_paypal_client_id
    ```
 
 4. **Run the application**
@@ -143,18 +140,24 @@ OGMS/
 
 ## 💳 Payment Methods
 
-The application supports multiple payment methods with a scalable architecture:
+The application uses a scalable payment system architecture:
 
-### Currently Supported
-- **Cash on Delivery (COD):** Default payment method
-- **PayPal:** Online payment integration
+### Primary Payment Method
+- **Cash on Delivery (COD):** Default and primary payment method
+  - Pay when you receive your order
+  - Orders marked as paid when delivered
+  - Simple and secure payment process
 
 ### Future Ready
 - **JazzCash:** Mobile wallet integration (template ready)
 - **Easypaisa:** Mobile wallet integration (template ready)
 
-### Adding New Payment Methods
-Simply update `frontend/src/config/paymentMethods.js` to enable new payment methods without modifying core logic.
+### Payment Architecture
+Payment methods are configured in `frontend/src/config/paymentMethods.js`:
+- Easy to enable/disable payment methods
+- Scalable for future payment integrations
+- Clean separation of payment logic
+- COD orders automatically marked as paid on delivery
 
 ## 🎯 Key Features Demo
 
@@ -187,7 +190,6 @@ NODE_ENV=development
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/ogms
 JWT_SECRET=your_secret_key_here
-PAYPAL_CLIENT_ID=your_paypal_client_id
 ```
 
 ### Payment Methods Configuration
@@ -203,7 +205,7 @@ Payment methods are configured in `frontend/src/config/paymentMethods.js`:
 1. **MongoDB Connection:** Ensure MongoDB is running and URI is correct
 2. **Port Conflicts:** Change PORT in .env if 5000 is occupied
 3. **CORS Issues:** Check frontend API URL configuration
-4. **Payment Issues:** Verify PayPal client ID configuration
+4. **Payment Issues:** COD orders are marked as paid when delivered
 
 ### Development Tips
 - Use `npm run dev` for hot reloading
@@ -227,7 +229,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Nouman Tariq**
 - GitHub: [@Nouman-Tariq827](https://github.com/Nouman-Tariq827)
 - Email: noumantariq827@gmail.com
-- LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
+- LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/nouman-tariq-b279022b4/)
 
 ## 🙏 Acknowledgments
 

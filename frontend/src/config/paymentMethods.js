@@ -29,15 +29,6 @@ export const PAYMENT_METHODS = {
     requiresPaymentOnDelivery: false,
     showPayPalButton: false,
   },
-  PayPal: {
-    id: 'PayPal',
-    name: 'PayPal or Credit Card',
-    description: 'Pay with PayPal or credit card',
-    icon: 'fab fa-paypal',
-    enabled: false, // Set to true if you want to enable PayPal again
-    requiresPaymentOnDelivery: false,
-    showPayPalButton: true,
-  },
 }
 
 // Get enabled payment methods

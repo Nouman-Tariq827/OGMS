@@ -112,9 +112,9 @@ const ProductListScreen = ({ history, match, location }) => {
                     <td>Rs {product.price}</td>
                     <td>{product.category}</td>
                     <td>{product.brand}</td>
-                    <td>
+                    <td className="text-center">
                       <LinkContainer to={`/admin/product/${product._id}/edit?page=${pageNumber}`}>
-                        <Button variant='light' className='btn-sm mr-2'>
+                        <Button variant='light' className='btn-sm mr-2' title="Edit Product">
                           <i className='fas fa-edit'></i>
                         </Button>
                       </LinkContainer>
@@ -122,6 +122,7 @@ const ProductListScreen = ({ history, match, location }) => {
                         variant='danger'
                         className='btn-sm'
                         onClick={() => deleteHandler(product._id)}
+                        title="Delete Product"
                       >
                         <i className='fas fa-trash'></i>
                       </Button>

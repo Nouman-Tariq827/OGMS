@@ -8,6 +8,63 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Admin table buttons styling */
+.admin-product-list td.text-center,
+.admin-user-list td.text-center {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.admin-product-list .btn-sm,
+.admin-user-list .btn-sm {
+  min-width: 32px;
+  height: 32px;
+  padding: 6px 8px;
+  margin: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-product-list .btn-sm:hover,
+.admin-user-list .btn-sm:hover {
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+.admin-product-list .btn-primary,
+.admin-user-list .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.admin-product-list .btn-primary:hover,
+.admin-user-list .btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.admin-product-list .btn-danger,
+.admin-user-list .btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.admin-product-list .btn-danger:hover,
+.admin-user-list .btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+/* Table responsive fixes */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
 main {
   background-color: #fdfdf8;
   min-height: 80vh;

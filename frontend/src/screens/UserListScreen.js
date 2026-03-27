@@ -34,7 +34,8 @@ const UserListScreen = ({ history }) => {
 
   return (
     <>
-      <h1>Users</h1>
+      <div className='admin-user-list'>
+        <h1>Users</h1>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -65,9 +66,9 @@ const UserListScreen = ({ history }) => {
                     <i className='fas fa-times' style={{ color: 'red' }}></i>
                   )}
                 </td>
-                <td>
+                <td className="text-center">
                   <LinkContainer to={`/admin/user/${user._id}/edit`}>
-                    <Button variant='light' className='btn-sm mr-2'>
+                    <Button variant='light' className='btn-sm mr-2' title="Edit User">
                       <i className='fas fa-edit'></i>
                     </Button>
                   </LinkContainer>
@@ -75,6 +76,7 @@ const UserListScreen = ({ history }) => {
                     variant='danger'
                     className='btn-sm'
                     onClick={() => deleteHandler(user._id)}
+                    title="Delete User"
                   >
                     <i className='fas fa-trash'></i>
                   </Button>
@@ -84,6 +86,7 @@ const UserListScreen = ({ history }) => {
           </tbody>
         </Table>
       )}
+    </div>
     </>
   )
 }

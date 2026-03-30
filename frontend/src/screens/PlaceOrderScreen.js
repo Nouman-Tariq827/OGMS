@@ -83,6 +83,10 @@ const PlaceOrderScreen = ({ history }) => {
                 {cart.shippingAddress.postalCode},{' '}
                 {cart.shippingAddress.country}
               </p>
+              <p>
+                <strong>Phone:</strong>
+                {cart.shippingAddress.phone}
+              </p>
             </ListGroup.Item>
 
             <ListGroup.Item>

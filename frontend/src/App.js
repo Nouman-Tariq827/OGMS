@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Container } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import HomeScreen from './screens/HomeScreen'
@@ -25,8 +26,41 @@ import CategoryProductsScreen from './screens/CategoryProductsScreen'
 import ContactScreen from './screens/ContactScreen'
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
 import ResetPasswordScreen from './screens/ResetPasswordScreen'
+import { logout } from './actions/userActions'
 
 const App = () => {
+  const dispatch = useDispatch()
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
+  // Check for expired tokens on app load and periodically
+  useEffect(() => {
+    const validateToken = () => {
+      if (userInfo && userInfo.token) {
+        try {
+          const tokenPayload = JSON.parse(atob(userInfo.token.split('.')[1]))
+          const currentTime = Date.now() / 1000
+          
+          // If token is expired, logout user
+          if (tokenPayload.exp < currentTime) {
+            dispatch(logout())
+          }
+        } catch (error) {
+          // If token is invalid, logout user
+          dispatch(logout())
+        }
+      }
+    }
+
+    // Validate on initial load
+    validateToken()
+
+    // Set up periodic validation (every 5 minutes)
+    const interval = setInterval(validateToken, 5 * 60 * 1000)
+
+    return () => clearInterval(interval)
+  }, [dispatch, userInfo])
+
   return (
     <Router>
       <Header />

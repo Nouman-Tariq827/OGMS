@@ -68,12 +68,39 @@ const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
   : null
 
+// Validate token before using it
+const validateToken = (userInfo) => {
+  if (!userInfo || !userInfo.token) {
+    return null
+  }
+  
+  // Check if token is expired (simple check - JWT tokens have exp claim)
+  try {
+    const tokenPayload = JSON.parse(atob(userInfo.token.split('.')[1]))
+    const currentTime = Date.now() / 1000
+    
+    // If token is expired, clear localStorage and return null
+    if (tokenPayload.exp < currentTime) {
+      localStorage.removeItem('userInfo')
+      return null
+    }
+    
+    return userInfo
+  } catch (error) {
+    // If token is invalid, clear localStorage and return null
+    localStorage.removeItem('userInfo')
+    return null
+  }
+}
+
+const validUserInfo = validateToken(userInfoFromStorage)
+
 const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: shippingAddressFromStorage,
   },
-  userLogin: { userInfo: userInfoFromStorage },
+  userLogin: { userInfo: validUserInfo },
 }
 
 const middleware = [thunk]

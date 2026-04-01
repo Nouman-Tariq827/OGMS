@@ -21,15 +21,27 @@ const CartScreen = ({ match, location, history }) => {
   const orderListMy = useSelector((state) => state.orderListMy)
   const { loading: loadingOrders, error: errorOrders, orders } = orderListMy
 
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
+
   useEffect(() => {
+    // Redirect to login if no user is logged in
+    if (!userInfo) {
+      history.push('/login')
+      return
+    }
+
     if (productId) {
       dispatch(addToCart(productId, qty))
     }
-  }, [dispatch, productId, qty])
+  }, [dispatch, productId, qty, userInfo, history])
 
   useEffect(() => {
-    dispatch(listMyOrders())
-  }, [dispatch])
+    // Only fetch orders if user is logged in
+    if (userInfo) {
+      dispatch(listMyOrders())
+    }
+  }, [dispatch, userInfo])
 
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id))
@@ -39,6 +51,12 @@ const CartScreen = ({ match, location, history }) => {
   const undeliveredOrders = orders ? orders.filter(order => !order.isDelivered) : []
 
   const checkoutHandler = () => {
+    // Check if user is logged in before proceeding to checkout
+    if (!userInfo) {
+      history.push('/login')
+      return
+    }
+
     // Check checkout progress and redirect to appropriate step
     if (!shippingAddress) {
       history.push('/shipping')

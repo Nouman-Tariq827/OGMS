@@ -9,11 +9,11 @@ const ShippingScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart)
   const { shippingAddress } = cart
 
-  const [address, setAddress] = useState(shippingAddress.address)
-  const [city, setCity] = useState(shippingAddress.city)
-  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode)
-  const [country, setCountry] = useState(shippingAddress.country)
-  const [phone, setPhone] = useState(shippingAddress.phone)
+  const [address, setAddress] = useState(shippingAddress.address || '')
+  const [city, setCity] = useState(shippingAddress.city || '')
+  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode || '')
+  const [country, setCountry] = useState(shippingAddress.country || '')
+  const [phone, setPhone] = useState(shippingAddress.phone || '')
 
   const dispatch = useDispatch()
 
@@ -74,12 +74,11 @@ const ShippingScreen = ({ history }) => {
         </Form.Group>
 
         <Form.Group controlId='phone'>
-          <Form.Label>Phone Number</Form.Label>
+          <Form.Label>Phone Number (Optional)</Form.Label>
           <Form.Control
             type='tel'
             placeholder='Enter phone number'
             value={phone}
-            required
             onChange={(e) => setPhone(e.target.value)}
           ></Form.Control>
         </Form.Group>

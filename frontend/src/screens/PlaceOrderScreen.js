@@ -48,6 +48,13 @@ const PlaceOrderScreen = ({ history }) => {
   }, [history, success, order, dispatch])
 
   const placeOrderHandler = () => {
+    // Validate shipping address before placing order
+    if (!cart.shippingAddress || !cart.shippingAddress.address) {
+      alert('Please complete your shipping information before placing an order.')
+      history.push('/shipping')
+      return
+    }
+
     dispatch(
       createOrder({
         orderItems: cart.cartItems,
@@ -85,7 +92,7 @@ const PlaceOrderScreen = ({ history }) => {
               </p>
               <p>
                 <strong>Phone:</strong>
-                {cart.shippingAddress.phone}
+                {cart.shippingAddress.phone || 'Not provided'}
               </p>
             </ListGroup.Item>
 

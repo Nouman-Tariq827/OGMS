@@ -80,7 +80,7 @@ const OrderScreen = ({ match, history }) => {
               </p>
               <p>
                 <strong>Phone:</strong>
-                {order.shippingAddress.phone}
+                {order.shippingAddress.phone || 'Not provided'}
               </p>
               {order.isDelivered ? (
                 <Message variant='success'>

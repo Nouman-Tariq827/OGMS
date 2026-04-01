@@ -58,7 +58,7 @@ const CartScreen = ({ match, location, history }) => {
     }
 
     // Check checkout progress and redirect to appropriate step
-    if (!shippingAddress) {
+    if (!shippingAddress || !shippingAddress.address) {
       history.push('/shipping')
     } else if (!paymentMethod) {
       history.push('/payment')

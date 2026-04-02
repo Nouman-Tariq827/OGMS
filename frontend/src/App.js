@@ -20,6 +20,7 @@ import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import AdminDashboardScreen from './screens/AdminDashboardScreen'
+import SalesProfitScreen from './screens/SalesProfitScreen'
 import UserDashboardScreen from './screens/UserDashboardScreen'
 import AboutScreen from './screens/AboutScreen'
 import CategoryProductsScreen from './screens/CategoryProductsScreen'
@@ -102,6 +103,7 @@ const App = () => {
             exact
           />
           <Route path='/admin/orderlist' component={OrderListScreen} />
+          <Route path='/admin/sales-profit' component={SalesProfitScreen} />
           <Route path='/admin/dashboard' component={AdminDashboardScreen} />
           <Route path='/search/:keyword' component={HomeScreen} exact />
           <Route path='/page/:pageNumber' component={HomeScreen} exact />

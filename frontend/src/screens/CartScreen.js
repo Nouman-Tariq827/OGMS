@@ -47,8 +47,12 @@ const CartScreen = ({ match, location, history }) => {
     dispatch(removeFromCart(id))
   }
 
-  // Filter orders that are not delivered yet
-  const undeliveredOrders = orders ? orders.filter(order => !order.isDelivered) : []
+  // Filter orders that are not delivered yet and sort by date (most recent first)
+  const undeliveredOrders = orders 
+    ? orders
+        .filter(order => !order.isDelivered)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    : []
 
   const checkoutHandler = () => {
     // Check if user is logged in before proceeding to checkout

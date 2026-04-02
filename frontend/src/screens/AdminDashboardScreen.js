@@ -74,7 +74,7 @@ const AdminDashboardScreen = ({ history }) => {
       </div>
 
       <Row>
-        <Col md={4} className='mb-3'>
+        <Col md={3} className='mb-3'>
           <Card className='shadow-sm h-100'>
             <Card.Body>
               <Card.Title><i className='fas fa-users mr-2'></i> User Management</Card.Title>
@@ -95,7 +95,7 @@ const AdminDashboardScreen = ({ history }) => {
           </Card>
         </Col>
 
-        <Col md={4} className='mb-3'>
+        <Col md={3} className='mb-3'>
           <Card className='shadow-sm h-100'>
             <Card.Body>
               <Card.Title><i className='fas fa-boxes mr-2'></i> Product Management</Card.Title>
@@ -116,7 +116,7 @@ const AdminDashboardScreen = ({ history }) => {
           </Card>
         </Col>
 
-        <Col md={4} className='mb-3'>
+        <Col md={3} className='mb-3'>
           <Card className='shadow-sm h-100'>
             <Card.Body>
               <Card.Title><i className='fas fa-receipt mr-2'></i> Order Management</Card.Title>
@@ -132,6 +132,21 @@ const AdminDashboardScreen = ({ history }) => {
               )}
               <LinkContainer to='/admin/orderlist'>
                 <Button variant='info'>Go to Orders</Button>
+              </LinkContainer>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={3} className='mb-3'>
+          <Card className='shadow-sm h-100'>
+            <Card.Body>
+              <Card.Title><i className='fas fa-chart-line mr-2'></i> Sales & Profit Management</Card.Title>
+              <Card.Text>
+                Track revenue, profit margins, and sales analytics
+                with comprehensive reporting tools
+              </Card.Text>
+              <LinkContainer to='/admin/sales-profit'>
+                <Button variant='warning'>Go to Analytics</Button>
               </LinkContainer>
             </Card.Body>
           </Card>

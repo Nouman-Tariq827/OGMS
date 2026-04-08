@@ -146,6 +146,12 @@ const updateProduct = asyncHandler(async (req, res) => {
 const createProductReview = asyncHandler(async (req, res) => {
   const { rating, comment } = req.body
 
+  // Validate required fields
+  if (!rating || !comment || comment.trim() === '') {
+    res.status(400)
+    throw new Error('Rating and comment are required')
+  }
+
   const product = await Product.findById(req.params.id)
 
   if (product) {
@@ -161,7 +167,7 @@ const createProductReview = asyncHandler(async (req, res) => {
     const review = {
       name: req.user.name,
       rating: Number(rating),
-      comment,
+      comment: comment.trim(),
       user: req.user._id,
     }
 

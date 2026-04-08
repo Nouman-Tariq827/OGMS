@@ -55,10 +55,17 @@ const ProductScreen = ({ history, match }) => {
 
   const submitHandler = (e) => {
     e.preventDefault()
+    
+    // Validate form before submission
+    if (!rating || rating === '0' || !comment || comment.trim() === '') {
+      alert('Please provide both rating and comment')
+      return
+    }
+    
     dispatch(
       createProductReview(match.params.id, {
         rating,
-        comment,
+        comment: comment.trim(),
       })
     )
   }

@@ -100,14 +100,14 @@ const SalesProfitScreen = ({ history }) => {
   const metrics = calculateMetrics()
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PK', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'PKR'
     }).format(amount)
   }
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('en-PK', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -250,7 +250,7 @@ const SalesProfitScreen = ({ history }) => {
                       )}
                     </td>
                     <td>
-                      {order.isDelivered ? formatCurrency(order.totalPrice * 0.3) : '$0.00'}
+                      {order.isDelivered ? formatCurrency(order.totalPrice * 0.3) : 'PKR 0.00'}
                     </td>
                   </tr>
                 ))}

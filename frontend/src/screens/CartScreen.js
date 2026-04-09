@@ -160,7 +160,7 @@ const CartScreen = ({ match, location, history }) => {
                         <strong>Order ID:</strong> {order._id}
                       </Col>
                       <Col md={4}>
-                        <strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()}
+                        <strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString('en-PK')}
                       </Col>
                       <Col md={4} className="text-right">
                         <Button

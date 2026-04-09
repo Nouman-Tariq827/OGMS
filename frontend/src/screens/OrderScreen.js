@@ -84,7 +84,7 @@ const OrderScreen = ({ match, history }) => {
               </p>
               {order.isDelivered ? (
                 <Message variant='success'>
-                  Delivered on {order.deliveredAt}
+                  Delivered on {new Date(order.deliveredAt).toLocaleDateString('en-PK')}
                 </Message>
               ) : (
                 <Message variant='danger'>Not Delivered</Message>
@@ -103,7 +103,7 @@ const OrderScreen = ({ match, history }) => {
                   Payment will be collected upon delivery
                 </Message>
               ) : order.isPaid ? (
-                <Message variant='success'>Paid on {order.paidAt}</Message>
+                <Message variant='success'>Paid on {new Date(order.paidAt).toLocaleDateString('en-PK')}</Message>
               ) : (
                 <Message variant='danger'>Not Paid</Message>
               )}

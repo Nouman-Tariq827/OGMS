@@ -65,12 +65,12 @@ const OrderListScreen = ({ history }) => {
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
-                <td>{order.createdAt.substring(0, 10)}</td>
+                <td>{new Date(order.createdAt).toLocaleDateString('en-PK')}</td>
                 <td>Rs {order.totalPrice}</td>
                 <td>
                   {order.isPaid ? (
                     <span className='badge bg-success'>
-                      Paid on {order.paidAt.substring(0, 10)}
+                      Paid on {new Date(order.paidAt).toLocaleDateString('en-PK')}
                     </span>
                   ) : (
                     <Button
@@ -85,7 +85,7 @@ const OrderListScreen = ({ history }) => {
                 </td>
                 <td>
                   {order.isDelivered ? (
-                    order.deliveredAt.substring(0, 10)
+                    new Date(order.deliveredAt).toLocaleDateString('en-PK')
                   ) : (
                     <i className='fas fa-times' style={{ color: 'red' }}></i>
                   )}

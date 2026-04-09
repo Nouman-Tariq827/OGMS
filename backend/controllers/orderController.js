@@ -63,11 +63,23 @@ const updateOrderToPaid = async (req, res) => {
   if (order) {
     order.isPaid = true
     order.paidAt = Date.now()
-    order.paymentResult = {
-      id: req.body.id,
-      status: req.body.status,
-      update_time: req.body.update_time,
-      email_address: req.body.payer.email_address,
+    
+    // Handle payment result - check if it exists
+    if (req.body && req.body.payer && req.body.payer.email_address) {
+      order.paymentResult = {
+        id: req.body.id,
+        status: req.body.status,
+        update_time: req.body.update_time,
+        email_address: req.body.payer.email_address,
+      }
+    } else {
+      // For admin manual payments or COD payments
+      order.paymentResult = {
+        id: `ADMIN-${order._id}`,
+        status: 'COMPLETED',
+        update_time: new Date().toISOString(),
+        email_address: order.user.email || 'admin@example.com',
+      }
     }
 
     const updatedOrder = await order.save()

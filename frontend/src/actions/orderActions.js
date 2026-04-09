@@ -16,6 +16,9 @@ import {
   ORDER_DELIVER_FAIL,
   ORDER_DELIVER_SUCCESS,
   ORDER_DELIVER_REQUEST,
+  ORDER_PAID_REQUEST,
+  ORDER_PAID_SUCCESS,
+  ORDER_PAID_FAIL,
 } from '../constants/orderConstants'
 import { logout } from './userActions'
 
@@ -135,6 +138,47 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
     }
     dispatch({
       type: ORDER_DELIVER_FAIL,
+      payload: message,
+    })
+  }
+}
+
+export const payOrder = (order) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ORDER_PAID_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    const { data } = await axios.put(
+      `/api/orders/${order._id}/pay`,
+      {},
+      config
+    )
+
+    dispatch({
+      type: ORDER_PAID_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout())
+    }
+    dispatch({
+      type: ORDER_PAID_FAIL,
       payload: message,
     })
   }

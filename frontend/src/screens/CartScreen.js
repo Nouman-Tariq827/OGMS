@@ -47,6 +47,53 @@ const CartScreen = ({ match, location, history }) => {
     dispatch(removeFromCart(id))
   }
 
+  // Custom styles for quantity stepper
+  const quantityStepperStyles = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '4px',
+    padding: '4px',
+    borderRadius: '6px'
+  }
+
+  const quantityButtonStyles = {
+    width: '32px',
+    height: '32px',
+    borderRadius: '6px',
+    border: '1px solid #ced4da',
+    backgroundColor: '#ffffff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '16px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    color: '#495057',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+  }
+
+  const quantityButtonDisabledStyles = {
+    backgroundColor: '#e9ecef',
+    borderColor: '#e9ecef',
+    color: '#6c757d',
+    cursor: 'not-allowed',
+    opacity: '0.6'
+  }
+
+  const quantityInputStyles = {
+    width: '45px',
+    height: '32px',
+    textAlign: 'center',
+    border: '1px solid #ced4da',
+    borderRadius: '6px',
+    fontSize: '14px',
+    fontWeight: '600',
+    backgroundColor: '#ffffff',
+    color: '#495057'
+  }
+
   // Filter orders that are not delivered yet and sort by date (most recent first)
   const undeliveredOrders = orders 
     ? orders
@@ -109,21 +156,71 @@ const CartScreen = ({ match, location, history }) => {
                       </Col>
                       <Col md={2}>Rs {item.price}</Col>
                       <Col md={2}>
-                        <Form.Control
-                          as='select'
-                          value={item.qty}
-                          onChange={(e) =>
-                            dispatch(
-                              addToCart(item.product, Number(e.target.value))
-                            )
-                          }
-                        >
-                          {[...Array(item.countInStock).keys()].map((x) => (
-                            <option key={x + 1} value={x + 1}>
-                              {x + 1}
-                            </option>
-                          ))}
-                        </Form.Control>
+                        <div style={quantityStepperStyles}>
+                          <Button
+                            variant='outline-secondary'
+                            size='sm'
+                            onClick={() => {
+                              if (item.qty > 1) {
+                                dispatch(addToCart(item.product, item.qty - 1))
+                              }
+                            }}
+                            disabled={item.qty <= 1}
+                            className="quantity-btn"
+                            style={item.qty <= 1 ? {...quantityButtonStyles, ...quantityButtonDisabledStyles} : quantityButtonStyles}
+                            onMouseEnter={(e) => {
+                              if (item.qty > 1) {
+                                e.target.style.backgroundColor = '#28a745'
+                                e.target.style.borderColor = '#28a745'
+                                e.target.style.color = '#ffffff'
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (item.qty > 1) {
+                                e.target.style.backgroundColor = '#ffffff'
+                                e.target.style.borderColor = '#ced4da'
+                                e.target.style.color = '#495057'
+                              }
+                            }}
+                          >
+                            -
+                          </Button>
+                          <Form.Control
+                            type='text'
+                            value={item.qty}
+                            readOnly
+                            className="text-center mx-2"
+                            style={quantityInputStyles}
+                          />
+                          <Button
+                            variant='outline-secondary'
+                            size='sm'
+                            onClick={() => {
+                              if (item.qty < item.countInStock) {
+                                dispatch(addToCart(item.product, item.qty + 1))
+                              }
+                            }}
+                            disabled={item.qty >= item.countInStock}
+                            className="quantity-btn"
+                            style={item.qty >= item.countInStock ? {...quantityButtonStyles, ...quantityButtonDisabledStyles} : quantityButtonStyles}
+                            onMouseEnter={(e) => {
+                              if (item.qty < item.countInStock) {
+                                e.target.style.backgroundColor = '#28a745'
+                                e.target.style.borderColor = '#28a745'
+                                e.target.style.color = '#ffffff'
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (item.qty < item.countInStock) {
+                                e.target.style.backgroundColor = '#ffffff'
+                                e.target.style.borderColor = '#ced4da'
+                                e.target.style.color = '#495057'
+                              }
+                            }}
+                          >
+                            +
+                          </Button>
+                        </div>
                       </Col>
                       <Col md={2}>
                         <Button

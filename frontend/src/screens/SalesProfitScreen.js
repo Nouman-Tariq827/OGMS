@@ -40,14 +40,16 @@ const SalesProfitScreen = ({ history }) => {
     const delivered = filteredOrders.filter(order => order.isDelivered)
     const pending = filteredOrders.filter(order => !order.isDelivered)
 
-    const totalRevenue = delivered.reduce((sum, order) => sum + order.totalPrice, 0)
+    // Total revenue from ALL orders (both delivered and pending)
+    const totalRevenue = filteredOrders.reduce((sum, order) => sum + order.totalPrice, 0)
     const totalOrders = filteredOrders.length
     const deliveredOrders = delivered.length
     const pendingOrders = pending.length
-    const averageOrderValue = deliveredOrders > 0 ? totalRevenue / deliveredOrders : 0
+    const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
     
-    // Assuming 30% profit margin
-    const profit = totalRevenue * 0.3
+    // Assuming 30% profit margin on delivered orders only
+    const deliveredRevenue = delivered.reduce((sum, order) => sum + order.totalPrice, 0)
+    const profit = deliveredRevenue * 0.3
 
     return {
       totalRevenue,
@@ -179,7 +181,7 @@ const SalesProfitScreen = ({ history }) => {
             <Card.Body>
               <Card.Title><i className='fas fa-dollar-sign mr-2'></i>Total Revenue</Card.Title>
               <h2 className='mb-0'>{formatCurrency(metrics.totalRevenue)}</h2>
-              <small>From delivered orders</small>
+              <small>From all orders (delivered + pending)</small>
             </Card.Body>
           </Card>
         </Col>

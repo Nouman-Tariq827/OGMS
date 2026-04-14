@@ -643,3 +643,155 @@ h2 {
     font-size: 1.05rem;
   }
 }
+
+/* Small Laptop and Tablet Responsive Design */
+@media (min-width: 768px) and (max-width: 1199px) {
+  /* Hero Slider Responsive for Small Laptops/Tablets */
+  .hero-slider img {
+    height: 300px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  
+  .hero-slider .carousel-item {
+    height: 300px !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Laptop and Large Screen Responsive Design */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  /* Scale down from 2560px to 1440px */
+  html {
+    font-size: 90%;
+  }
+  
+  .container {
+    max-width: 1200px;
+  }
+  
+  .product-card {
+    margin-bottom: 1rem;
+  }
+  
+  .admin-product-list .btn-sm,
+  .admin-user-list .btn-sm {
+    min-width: 28px;
+    height: 28px;
+    padding: 4px 6px;
+    font-size: 0.8rem;
+  }
+  
+  .table {
+    font-size: 0.95rem;
+  }
+  
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+  
+  .nav-item-link,
+  .dropdown-toggle {
+    font-size: 0.85rem !important;
+    padding: 0.8rem 1.2rem !important;
+  }
+  
+  .btn,
+  .form-control,
+  .search-input,
+  .search-button {
+    font-size: 1rem;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+  }
+  
+  h3 {
+    font-size: 1.15rem;
+  }
+  
+  /* Hero Slider Responsive for 1024px Laptop */
+  .hero-slider img {
+    height: 350px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  
+  .hero-slider .carousel-item {
+    height: 350px !important;
+    overflow: hidden !important;
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 2559px) {
+  /* Scale down from 2560px to 1440px+ */
+  html {
+    font-size: 95%;
+  }
+  
+  .container {
+    max-width: 1400px;
+  }
+  
+  .product-card {
+    margin-bottom: 1.2rem;
+  }
+  
+  .admin-product-list .btn-sm,
+  .admin-user-list .btn-sm {
+    min-width: 30px;
+    height: 30px;
+    padding: 5px 8px;
+    font-size: 0.9rem;
+  }
+  
+  .table {
+    font-size: 1rem;
+  }
+  
+  .navbar-brand {
+    font-size: 1.3rem;
+  }
+  
+  .nav-item-link,
+  .dropdown-toggle {
+    font-size: 0.9rem !important;
+    padding: 0.9rem 1.4rem !important;
+  }
+  
+  .btn,
+  .form-control,
+  .search-input,
+  .search-button {
+    font-size: 1.05rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 1.2rem;
+  }
+  
+  /* Hero Slider Responsive for Laptop */
+  .hero-slider img {
+    height: 500px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  
+  .hero-slider .carousel-item {
+    height: 500px !important;
+    overflow: hidden !important;
+  }
+}

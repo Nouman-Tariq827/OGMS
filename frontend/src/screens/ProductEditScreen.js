@@ -40,7 +40,6 @@ const ProductEditScreen = ({ match, history, location }) => {
     loading: loadingCreate,
     error: errorCreate,
     success: successCreate,
-    product: createdProduct,
   } = productCreate
 
   useEffect(() => {

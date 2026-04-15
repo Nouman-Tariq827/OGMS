@@ -8,7 +8,6 @@ import Paginate from '../components/Paginate'
 import {
   listProducts,
   deleteProduct,
-  createProduct,
 } from '../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Card, Button } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
@@ -25,16 +25,8 @@ const AdminDashboardScreen = ({ history }) => {
   const userList = useSelector((state) => state.userList)
   const { loading: loadingUsers, error: errorUsers, users } = userList
 
-  // Manual refresh function
-  const refreshDashboard = () => {
-    dispatch(listUsers())
-    dispatch(listOrders())
-    dispatch(listProducts('', 1))
-    fetchTotalProductCount()
-  }
-
   // Fetch total product count from backend
-  const fetchTotalProductCount = async () => {
+  const fetchTotalProductCount = useCallback(async () => {
     try {
       // The backend uses pageSize = 12, so we can calculate total count
       if (pages && products) {
@@ -42,7 +34,7 @@ const AdminDashboardScreen = ({ history }) => {
         if (page === pages) {
           setTotalProductCount((pages - 1) * 12 + products.length)
         } else {
-          // If not on last page, we need to fetch the last page
+          // If not on last page, we need to fetch to last page
           const { data } = await axios.get(`/api/products?pageNumber=${pages}`)
           setTotalProductCount((pages - 1) * 12 + data.products.length)
         }
@@ -53,7 +45,15 @@ const AdminDashboardScreen = ({ history }) => {
       console.error('Error fetching total product count:', error)
       setTotalProductCount(0)
     }
-  }
+  }, [pages, products, page])
+
+  // Manual refresh function
+  const refreshDashboard = useCallback(() => {
+    dispatch(listUsers())
+    dispatch(listOrders())
+    dispatch(listProducts('', 1))
+    fetchTotalProductCount()
+  }, [dispatch, fetchTotalProductCount])
 
   // Auto-refresh when component mounts or user returns to dashboard
   useEffect(() => {
@@ -62,7 +62,7 @@ const AdminDashboardScreen = ({ history }) => {
     } else {
       refreshDashboard()
     }
-  }, [dispatch, history, userInfo])
+  }, [dispatch, history, userInfo, refreshDashboard])
 
   return (
     <>

@@ -260,19 +260,18 @@ const SalesProfitScreen = ({ history }) => {
             <Table striped bordered hover responsive className='table-sm'>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>ORDER ID</th>
                   <th>ORDER PLACED DATE</th>
                   <th>CUSTOMER</th>
                   <th>TOTAL</th>
                   <th>STATUS</th>
-                  <th>PROFIT</th>
-                  <th>LAST DELIVERED DATE</th>
+                  <th>DELIVERED DATE</th>
                 </tr>
               </thead>
               <tbody>
                 {filterOrdersByDate(orders).slice(0, 50).map((order) => (
                   <tr key={order._id}>
-                    <td>{order._id.substring(0, 8)}...</td>
+                    <td>{order._id}</td>
                     <td>{formatDate(order.createdAt)}</td>
                     <td>{order.user ? order.user.name : 'N/A'}</td>
                     <td>{formatCurrency(order.totalPrice)}</td>
@@ -282,9 +281,6 @@ const SalesProfitScreen = ({ history }) => {
                       ) : (
                         <span className='badge bg-warning'>Pending</span>
                       )}
-                    </td>
-                    <td>
-                      {order.isDelivered ? formatCurrency(order.totalPrice * 0.3) : 'PKR 0.00'}
                     </td>
                     <td>{order.isDelivered ? formatDate(order.deliveredAt) : 'N/A'}</td>
                   </tr>

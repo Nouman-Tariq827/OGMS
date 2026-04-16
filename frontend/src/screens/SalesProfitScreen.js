@@ -25,15 +25,6 @@ const SalesProfitScreen = ({ history }) => {
     }
   }, [dispatch, history, userInfo])
 
-  // Auto-refresh orders periodically to get latest data
-  useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(listOrders())
-    }, 30000) // Refresh every 30 seconds
-    
-    return () => clearInterval(interval)
-  }, [dispatch])
-
   // Calculate sales and profit metrics
   const calculateMetrics = () => {
     if (!orders) return {

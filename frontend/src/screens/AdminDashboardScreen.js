@@ -28,15 +28,15 @@ const AdminDashboardScreen = ({ history }) => {
   // Fetch total product count from backend
   const fetchTotalProductCount = useCallback(async () => {
     try {
-      // The backend uses pageSize = 12, so we can calculate total count
-      if (pages && products) {
-        // If we're on the last page, we have the exact count
-        if (page === pages) {
-          setTotalProductCount((pages - 1) * 12 + products.length)
+      const { data } = await axios.get('/api/products?pageNumber=1')
+      if (data.pages && data.products) {
+        // If there's only one page, use that count
+        if (data.pages === 1) {
+          setTotalProductCount(data.products.length)
         } else {
-          // If not on last page, we need to fetch to last page
-          const { data } = await axios.get(`/api/products?pageNumber=${pages}`)
-          setTotalProductCount((pages - 1) * 12 + data.products.length)
+          // Fetch the last page to get exact count
+          const { data: lastPageData } = await axios.get(`/api/products?pageNumber=${data.pages}`)
+          setTotalProductCount((data.pages - 1) * 12 + lastPageData.products.length)
         }
       } else {
         setTotalProductCount(0)
@@ -45,14 +45,15 @@ const AdminDashboardScreen = ({ history }) => {
       console.error('Error fetching total product count:', error)
       setTotalProductCount(0)
     }
-  }, [pages, products, page])
+  }, [])
 
   // Manual refresh function
   const refreshDashboard = useCallback(() => {
     dispatch(listUsers())
     dispatch(listOrders())
     dispatch(listProducts('', 1))
-    fetchTotalProductCount()
+    // Fetch total product count after a delay
+    setTimeout(fetchTotalProductCount, 500)
   }, [dispatch, fetchTotalProductCount])
 
   // Auto-refresh when component mounts or user returns to dashboard

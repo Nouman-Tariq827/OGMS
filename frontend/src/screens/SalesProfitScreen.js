@@ -25,6 +25,15 @@ const SalesProfitScreen = ({ history }) => {
     }
   }, [dispatch, history, userInfo])
 
+  // Auto-refresh orders periodically to get latest data
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(listOrders())
+    }, 30000) // Refresh every 30 seconds
+    
+    return () => clearInterval(interval)
+  }, [dispatch])
+
   // Calculate sales and profit metrics
   const calculateMetrics = () => {
     if (!orders) return {
@@ -69,30 +78,52 @@ const SalesProfitScreen = ({ history }) => {
     
     if (dateFilter === 'all') {
       filteredOrders = orders
-    } else {
+    } else if (dateFilter === 'today') {
+      // Show orders delivered today (more inclusive) - handle timezone issues
+      const today = new Date()
+      today.setHours(0, 0, 0, 0) // Start of day
+      today.setHours(23, 59, 59, 999) // End of day
+      filteredOrders = orders.filter(order => {
+        const deliveredDate = order.isDelivered ? new Date(order.deliveredAt) : null
+        if (deliveredDate) {
+          const deliveredDateOnly = new Date(deliveredDate.getFullYear(), deliveredDate.getMonth(), deliveredDate.getDate())
+          const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+          return deliveredDateOnly.getTime() >= todayOnly.getTime() && deliveredDateOnly.getTime() <= todayOnly.getTime() + 24 * 60 * 60 * 1000
+        }
+        return false
+      })
+      console.log('Today filter - Orders found:', filteredOrders.length, 'Total orders:', orders.length)
+    } else if (dateFilter === 'week') {
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+      filteredOrders = orders.filter(order => {
+        const deliveredDate = order.isDelivered ? new Date(order.deliveredAt) : null
+        if (deliveredDate) {
+          return deliveredDate >= weekAgo
+        }
+        return false
+        const orderDate = new Date(order.createdAt)
+        return orderDate >= weekAgo
+      })
+      console.log('Week filter - Orders found:', filteredOrders.length, 'Total orders:', orders.length)
+    } else if (dateFilter === 'month') {
+      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
       filteredOrders = orders.filter(order => {
         const orderDate = new Date(order.createdAt)
-        
-        switch (dateFilter) {
-          case 'today':
-            return orderDate.toDateString() === now.toDateString()
-          case 'week':
-            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-            return orderDate >= weekAgo
-          case 'month':
-            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-            return orderDate >= monthAgo
-          case 'custom':
-            if (startDate && endDate) {
-              const start = new Date(startDate)
-              const end = new Date(endDate)
-              return orderDate >= start && orderDate <= end
-            }
-            return true
-          default:
-            return true
-        }
+        return orderDate >= monthAgo
       })
+    } else if (dateFilter === 'custom') {
+      if (startDate && endDate) {
+        const start = new Date(startDate)
+        const end = new Date(endDate)
+        filteredOrders = orders.filter(order => {
+          const orderDate = new Date(order.createdAt)
+          return orderDate >= start && orderDate <= end
+        })
+      } else {
+        filteredOrders = orders
+      }
+    } else {
+      filteredOrders = orders
     }
     
     // Sort by date (most recent first)
@@ -230,15 +261,16 @@ const SalesProfitScreen = ({ history }) => {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>DATE</th>
+                  <th>ORDER PLACED DATE</th>
                   <th>CUSTOMER</th>
                   <th>TOTAL</th>
                   <th>STATUS</th>
                   <th>PROFIT</th>
+                  <th>LAST DELIVERED DATE</th>
                 </tr>
               </thead>
               <tbody>
-                {filterOrdersByDate(orders).slice(0, 10).map((order) => (
+                {filterOrdersByDate(orders).slice(0, 50).map((order) => (
                   <tr key={order._id}>
                     <td>{order._id.substring(0, 8)}...</td>
                     <td>{formatDate(order.createdAt)}</td>
@@ -254,6 +286,7 @@ const SalesProfitScreen = ({ history }) => {
                     <td>
                       {order.isDelivered ? formatCurrency(order.totalPrice * 0.3) : 'PKR 0.00'}
                     </td>
+                    <td>{order.isDelivered ? formatDate(order.deliveredAt) : 'N/A'}</td>
                   </tr>
                 ))}
               </tbody>

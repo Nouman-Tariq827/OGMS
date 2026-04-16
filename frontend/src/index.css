@@ -501,7 +501,7 @@ h2 {
 .product-card .card-img-top {
   border-radius: 12px 12px 0 0 !important;
   height: 200px !important;
-  object-fit: cover !important;
+  object-fit: contain !important;
   transition: transform 0.3s ease !important;
 }
 

@@ -8,43 +8,42 @@
 
 A modern, feature-rich e-commerce platform for online grocery shopping built with the MERN stack. This application provides a complete shopping experience with advanced features including product search, category-based navigation, user reviews, shopping cart, multiple payment methods, and comprehensive admin panel.
 
-
-
 ### Quick Access
 - **Admin Login:** `admin@example.com` / `123456`
 - **User Login:** `zrar@gmail.com` / `123456`
 - **Payment:** Cash on Delivery (COD) - Pay when you receive your order
 
-## ✨ Key Features
+## Key Features
 
-### 🛍️ Customer Features
+### Customer Features
 - **Product Browsing:** Advanced search with keyword filtering
 - **Category Navigation:** Dropdown-based category selection
 - **Product Details:** Detailed product pages with reviews and ratings
-- **Shopping Cart:** Add/remove items with quantity management
+- **Shopping Cart:** Advanced quantity stepper with real-time updates
 - **User Reviews:** Rate and review purchased products
 - **Order Tracking:** View order history and status
 - **Multiple Payment Methods:** Cash on Delivery (COD) as primary, ready for JazzCash/Easypaisa
-- **Responsive Design:** Mobile-first responsive UI
+- **Responsive Design:** Optimized for desktop (2560px), laptop (1440px, 1024px), and mobile devices
 
-### 👨‍💼 Admin Features
+### Admin Features
 - **Dashboard Analytics:** Real-time statistics and metrics
+- **Sales & Profit Management:** Advanced date filtering, revenue tracking, and order analysis
 - **Product Management:** CRUD operations with image upload
-- **Order Management:** View, update, and manage orders
+- **Order Management:** View, update, and manage orders with delivery status
 - **User Management:** User administration and role management
 - **Category Management:** Organize products by categories
 - **Review Moderation:** Manage customer reviews
 
-### 🎨 UI/UX Features
-- **Modern Design:** Clean, professional interface
-- **Hero Slider:** Animated carousel with custom controls
-- **Product Cards:** Hover effects and animations
+### UI/UX Features
+- **Modern Design:** Clean, professional interface with custom footer
+- **Hero Slider:** Responsive carousel with optimized image display
+- **Product Cards:** Hover effects and animations with proper image scaling
 - **Pagination:** Efficient navigation through large datasets
 - **Search Integration:** Real-time product search
 - **Loading States:** Professional loading indicators
 - **Error Handling:** User-friendly error messages
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **React 18:** Modern React with functional components
@@ -67,7 +66,7 @@ A modern, feature-rich e-commerce platform for online grocery shopping built wit
 - **Git:** Version control
 - **VS Code:** Recommended IDE
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v14 or higher)
@@ -98,7 +97,7 @@ A modern, feature-rich e-commerce platform for online grocery shopping built wit
    ```env
    NODE_ENV=development
    PORT=5000
-   MONGO_URI=your_mongodb_connection_string
+   MONGO_URI=mongodb://localhost:27017/ogms
    JWT_SECRET=your_jwt_secret_key
    ```
 
@@ -116,7 +115,7 @@ A modern, feature-rich e-commerce platform for online grocery shopping built wit
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:5000
 
-## 📁 Project Structure
+## Project Structure
 
 ```bash
 OGMS/
@@ -138,9 +137,7 @@ OGMS/
 └── README.md
 ```
 
-## 💳 Payment Methods
-
-The application uses a scalable payment system architecture:
+## Payment Methods
 
 ### Primary Payment Method
 - **Cash on Delivery (COD):** Default and primary payment method
@@ -152,37 +149,29 @@ The application uses a scalable payment system architecture:
 - **JazzCash:** Mobile wallet integration (template ready)
 - **Easypaisa:** Mobile wallet integration (template ready)
 
-### Payment Architecture
-Payment methods are configured in `frontend/src/config/paymentMethods.js`:
-- Easy to enable/disable payment methods
-- Scalable for future payment integrations
-- Clean separation of payment logic
-- COD orders automatically marked as paid on delivery
+## Recent Improvements
 
-## 🎯 Key Features Demo
+### Sales & Profit Management
+- **Advanced Date Filtering:** Filter orders by delivered date (Today, Week, Month, Custom Range)
+- **Real-time Order Tracking:** Shows both order placed and delivered dates
+- **Professional Table Layout:** Clear column headers with complete order information
+- **Accurate Revenue Tracking:** Metrics calculated from delivered orders only
+- **Manual Refresh Control:** User-controlled data updates
 
-### Product Management
-- Advanced search with keyword filtering
-- Category-based navigation
-- Product ratings and reviews
-- Image gallery for products
-- Stock management
+### UI/UX Enhancements
+- **Responsive Design:** Optimized for all screen sizes including laptops (1024px, 1440px)
+- **Hero Slider Optimization:** Fixed image zoom issues on different screen sizes
+- **Product Image Display:** Improved image scaling with `object-fit: contain`
+- **Professional Footer:** Modern footer with contact information and quick links
+- **Advanced Cart Controls:** Quantity stepper with hover states and disabled states
 
-### Shopping Experience
-- Smooth cart management
-- Multiple payment options
-- Order tracking
-- User authentication
-- Responsive design
+### Performance Optimizations
+- **Code Quality:** Fixed ESLint warnings and improved code maintainability
+- **Component Optimization:** Proper React hooks usage and dependency management
+- **Error Handling:** Enhanced error handling and debugging capabilities
+- **State Management:** Optimized Redux state management for better performance
 
-### Admin Dashboard
-- Real-time analytics
-- Product CRUD operations
-- Order management
-- User administration
-- Revenue tracking
-
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 ```env
@@ -192,27 +181,7 @@ MONGO_URI=mongodb://localhost:27017/ogms
 JWT_SECRET=your_secret_key_here
 ```
 
-### Payment Methods Configuration
-Payment methods are configured in `frontend/src/config/paymentMethods.js`:
-- Enable/disable payment methods
-- Configure payment method properties
-- Set default payment method
-- Define payment behavior
-
-## 🐛 Troubleshooting
-
-### Common Issues
-1. **MongoDB Connection:** Ensure MongoDB is running and URI is correct
-2. **Port Conflicts:** Change PORT in .env if 5000 is occupied
-3. **CORS Issues:** Check frontend API URL configuration
-4. **Payment Issues:** COD orders are marked as paid when delivered
-
-### Development Tips
-- Use `npm run dev` for hot reloading
-- Check browser console for debugging
-- Verify MongoDB connection in backend logs
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -220,26 +189,19 @@ Payment methods are configured in `frontend/src/config/paymentMethods.js`:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+## Author
 
 **Nouman Tariq**
 - GitHub: [@Nouman-Tariq827](https://github.com/Nouman-Tariq827)
 - Email: noumantariq827@gmail.com
-- LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/nouman-tariq-b279022b4/)
-
-## 🙏 Acknowledgments
-
-- React Bootstrap team for the amazing UI framework
-- Font Awesome for the icon library
-- MERN stack community for the robust ecosystem
-- Open source contributors and reviewers
+- LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/nouman-tariq-b279022b4/)
 
 ---
 
-⭐ **Star this repository if it helped you!**
+Star this repository if it helped you!
 
-🚀 **Share this project with others who might find it useful!**
+Share this project with others who might find it useful!

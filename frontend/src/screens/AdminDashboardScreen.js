@@ -20,7 +20,7 @@ const AdminDashboardScreen = ({ history }) => {
   const { loading: loadingOrders, error: errorOrders, orders } = orderList
 
   const productList = useSelector((state) => state.productList)
-  const { loading: loadingProducts, error: errorProducts, products, page, pages } = productList
+  const { loading: loadingProducts, error: errorProducts } = productList
 
   const userList = useSelector((state) => state.userList)
   const { loading: loadingUsers, error: errorUsers, users } = userList

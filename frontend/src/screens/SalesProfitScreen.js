@@ -83,7 +83,6 @@ const SalesProfitScreen = ({ history }) => {
         }
         return false
       })
-      console.log('Today filter - Orders found:', filteredOrders.length, 'Total orders:', orders.length)
     } else if (dateFilter === 'week') {
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
       filteredOrders = orders.filter(order => {
@@ -92,10 +91,7 @@ const SalesProfitScreen = ({ history }) => {
           return deliveredDate >= weekAgo
         }
         return false
-        const orderDate = new Date(order.createdAt)
-        return orderDate >= weekAgo
       })
-      console.log('Week filter - Orders found:', filteredOrders.length, 'Total orders:', orders.length)
     } else if (dateFilter === 'month') {
       const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
       filteredOrders = orders.filter(order => {

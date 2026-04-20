@@ -61,7 +61,7 @@ const OrderListScreen = ({ history }) => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>

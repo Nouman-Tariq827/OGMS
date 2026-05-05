@@ -77,6 +77,12 @@ const Header = () => {
 
             {/* User Icons - Far Right */}
             <div className='header-icons d-flex align-items-center justify-content-end' style={{ flex: '1' }}>
+              <LinkContainer to='/filter' className='mx-3 text-dark text-decoration-none'>
+                <div className='text-center cursor-pointer header-icon-box'>
+                  <i className='fas fa-filter fa-lg mb-1 d-block'></i>
+                  <small className='font-weight-bold'>Filter</small>
+                </div>
+              </LinkContainer>
               {!(userInfo && userInfo.isAdmin) && (
                 <LinkContainer to='/cart' className='mx-3 text-dark text-decoration-none'>
                   <div className='text-center cursor-pointer header-icon-box'>

@@ -27,6 +27,7 @@ import CategoryProductsScreen from './screens/CategoryProductsScreen'
 import ContactScreen from './screens/ContactScreen'
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
 import ResetPasswordScreen from './screens/ResetPasswordScreen'
+import FilterScreen from './screens/FilterScreen'
 import { logout } from './actions/userActions'
 
 const App = () => {
@@ -85,6 +86,8 @@ const App = () => {
           <Route path='/about' component={AboutScreen} />
           <Route path='/category/:categoryName' component={CategoryProductsScreen} exact />
           <Route path='/category/:categoryName/page/:pageNumber' component={CategoryProductsScreen} />
+          <Route path='/filter' component={FilterScreen} exact />
+          <Route path='/filter/page/:pageNumber' component={FilterScreen} />
           <Route path='/admin/product/create' component={ProductEditScreen} />
           <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
           <Route path='/contact' component={ContactScreen} />

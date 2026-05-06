@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import SearchBox from './SearchBox'
+import FilterModal from './FilterModal'
 import { logout } from '../actions/userActions'
 
 const categories = [
@@ -23,12 +24,17 @@ const categories = [
 const Header = () => {
   const dispatch = useDispatch()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
   const logoutHandler = () => {
     dispatch(logout())
+  }
+
+  const handleFilterClick = () => {
+    setIsFilterOpen(true)
   }
 
   const handleCategoryClick = (category) => {
@@ -122,69 +128,9 @@ const Header = () => {
           </div>
         </Container>
       </div>
-
-      {/* Bottom Row: Navigation Links */}
-      <Navbar bg='white' variant='light' expand='lg' className='py-0 shadow-sm nav-secondary-bar'>
-        <Container fluid className='px-md-5'>
-          <div className='d-flex align-items-center w-100'>
-            <Nav className='mr-auto d-flex flex-row align-items-center'>
-              {userInfo && userInfo.isAdmin ? (
-                <>
-                  <LinkContainer to='/admin/userlist'>
-                    <Nav.Link className='nav-item-link'>Users</Nav.Link>
-                  </LinkContainer>
-                  <LinkContainer to='/admin/productlist'>
-                    <Nav.Link className='nav-item-link'>Products</Nav.Link>
-                  </LinkContainer>
-                  <LinkContainer to='/admin/orderlist'>
-                    <Nav.Link className='nav-item-link'>Orders</Nav.Link>
-                  </LinkContainer>
-                  <LinkContainer to='/admin/sales-profit'>
-                    <Nav.Link className='nav-item-link'>Sales & Profit Management</Nav.Link>
-                  </LinkContainer>
-                </>
-              ) : (
-                <>
-                  <LinkContainer to='/' exact>
-                <Nav.Link className='nav-item-link'>Home</Nav.Link>
-              </LinkContainer>
-                  <NavDropdown 
-                    title="Categories"
-                    id='categories-dropdown'
-                    show={isDropdownOpen}
-                    onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
-                  >
-                    {categories.map((category, index) => (
-                      <NavDropdown.Item 
-                        key={index}
-                        onClick={() => handleCategoryClick(category)}
-                      >
-                        {category}
-                      </NavDropdown.Item>
-                    ))}
-                  </NavDropdown>
-                  <LinkContainer to='/about'>
-                    <Nav.Link className='nav-item-link'>About Us</Nav.Link>
-                  </LinkContainer>
-                  <LinkContainer to='/contact'>
-                    <Nav.Link className='nav-item-link'>Contact Us</Nav.Link>
-                  </LinkContainer>
-                </>
-              )}
-            </Nav>
-            
-            {userInfo && userInfo.isAdmin && (
-              <Nav className='ml-auto'>
-                <LinkContainer to='/admin/dashboard'>
-                  <Nav.Link className='nav-item-link text-info'><i className='fas fa-tachometer-alt mr-1'></i> Dashboard</Nav.Link>
-                </LinkContainer>
-              </Nav>
-            )}
-          </div>
-        </Container>
-      </Navbar>
+      <FilterModal show={isFilterOpen} handleClose={() => setIsFilterOpen(false)} />
     </header>
   )
 }
-export default Header
 
+export default Header

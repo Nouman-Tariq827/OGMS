@@ -24,7 +24,7 @@ import {
 } from '../constants/productConstants'
 import { logout } from './userActions'
 
-export const listProducts = (keyword = '', pageNumber = '', category = '') => async (
+export const listProducts = (keyword = '', pageNumber = '', category = '', queryString = '') => async (
   dispatch
 ) => {
   try {
@@ -33,17 +33,33 @@ export const listProducts = (keyword = '', pageNumber = '', category = '') => as
     // Build API URL based on what parameters are provided
     let apiUrl = `/api/products?`
     
-    if (keyword) {
-      apiUrl += `keyword=${keyword}&`
+    console.log('Product Actions - Building API URL with:', { keyword, pageNumber, category, queryString })
+    
+    // If full query string is provided, use it directly
+    if (queryString) {
+      apiUrl += queryString
+    } else {
+      // Otherwise build from individual parameters
+      if (keyword) {
+        apiUrl += `keyword=${keyword}&`
+      }
+      
+      if (category) {
+        apiUrl += `category=${category}&`
+      }
     }
     
-    if (category) {
-      apiUrl += `category=${category}&`
-    }
-    
+    // Always append pageNumber at the end
     if (pageNumber) {
-      apiUrl += `pageNumber=${pageNumber}`
+      // Check if URL already has parameters
+      if (apiUrl.endsWith('&') || apiUrl.endsWith('?')) {
+        apiUrl += `pageNumber=${pageNumber}`
+      } else {
+        apiUrl += `&pageNumber=${pageNumber}`
+      }
     }
+    
+    console.log('Product Actions - Final API URL:', apiUrl)
 
     const { data } = await axios.get(apiUrl)
 

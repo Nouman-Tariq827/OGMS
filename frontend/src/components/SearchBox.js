@@ -33,7 +33,7 @@ const SearchBox = ({ history }) => {
         name='q'
         value={keyword} // Bind value to state to allow clearing
         onChange={(e) => setKeyword(e.target.value)}
-        placeholder='Search for products, brands and more...'
+        placeholder='Search products, brands, and more... (e.g., "Lifebuoy Soap")'
         className='search-input pl-5'
       />
     </Form>

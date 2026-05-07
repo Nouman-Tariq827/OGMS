@@ -8,6 +8,8 @@ const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 12 // Number of products to show per page (12 = 3 rows of 4 cards)
   const page = Number(req.query.pageNumber) || 1 // Current page number from URL
 
+  console.log('Backend - Received Query Parameters:', req.query)
+
   // Build search filter
   let searchFilter = {}
   
@@ -21,7 +23,55 @@ const getProducts = asyncHandler(async (req, res) => {
   
   // Check if there is a category filter in the URL
   if (req.query.category) {
-    searchFilter.category = req.query.category // Filter by exact category name
+    // Handle malformed parameter like "category=Hair Care" from "category=category=Hair Care"
+    let categoryValue = req.query.category
+    if (categoryValue.includes('category=')) {
+      categoryValue = categoryValue.replace('category=', '')
+    }
+    console.log('Backend - Processing Category Filter:', categoryValue)
+    searchFilter.category = categoryValue // Filter by exact category name
+  }
+  
+  // Check if there is a product name filter in the URL
+  if (req.query.productName) {
+    // Handle malformed parameter like "productName=surf" from "category=productName=surf"
+    let productNameValue = req.query.productName
+    if (productNameValue.includes('productName=')) {
+      productNameValue = productNameValue.replace('productName=', '')
+    }
+    console.log('Backend - Processing Product Name Filter:', productNameValue)
+    // Use productName for regex search to avoid conflict with keyword
+    searchFilter.name = {
+      $regex: productNameValue, // Use regular expression for searching
+      $options: 'i', // 'i' means case-insensitive
+    }
+  }
+  
+  // Check if there is a minimum price filter in the URL
+  if (req.query.minPrice) {
+    // Handle malformed parameter like "minPrice=900" from "category=minPrice=900"
+    let minPriceValue = req.query.minPrice
+    if (minPriceValue.includes('minPrice=')) {
+      minPriceValue = minPriceValue.replace('minPrice=', '')
+    }
+    console.log('Backend - Processing Min Price Filter:', minPriceValue)
+    searchFilter.price = {
+      $gte: Number(minPriceValue) // Greater than or equal to min price
+    }
+  }
+  
+  // Check if there is a maximum price filter in the URL
+  if (req.query.maxPrice) {
+    // Handle malformed parameter like "maxPrice=1000" from "category=maxPrice=1000"
+    let maxPriceValue = req.query.maxPrice
+    if (maxPriceValue.includes('maxPrice=')) {
+      maxPriceValue = maxPriceValue.replace('maxPrice=', '')
+    }
+    console.log('Backend - Processing Max Price Filter:', maxPriceValue)
+    searchFilter.price = {
+      ...searchFilter.price, // Keep existing price filter if any
+      $lte: Number(maxPriceValue) // Less than or equal to max price
+    }
   }
 
   console.log('Search filter:', searchFilter) // Debug log
@@ -33,6 +83,9 @@ const getProducts = asyncHandler(async (req, res) => {
   const products = await Product.find(searchFilter)
     .limit(pageSize)
     .skip(pageSize * (page - 1))
+  
+  console.log('Backend - Filtered Results Count:', products.length)
+  console.log('Backend - Final Search Filter Used:', searchFilter)
 
   // 3. Send back the products along with pagination details
   res.json({ products, page, pages: Math.ceil(count / pageSize) })

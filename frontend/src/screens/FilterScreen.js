@@ -15,12 +15,20 @@ const FilterScreen = ({ match, location }) => {
   const initialCategory = urlParams.get('category') || ''
   const initialMinPrice = urlParams.get('minPrice') || ''
   const initialMaxPrice = urlParams.get('maxPrice') || ''
+  const initialProductName = urlParams.get('productName') || ''
   const pageNumber = match.params.pageNumber || 1
+  
+  // Get search keyword from URL parameter (from SearchBox)
+  const searchKeyword = match.params.keyword || match.params.productName || ''
+  
+  // Use search keyword as product name if it exists
+  const effectiveProductName = initialProductName || searchKeyword
 
   // Local state for filter values
   const [minPrice, setMinPrice] = useState(initialMinPrice)
   const [maxPrice, setMaxPrice] = useState(initialMaxPrice)
   const [selectedCategory, setSelectedCategory] = useState(initialCategory)
+  const [productName, setProductName] = useState(effectiveProductName)
 
   const productList = useSelector((state) => state.productList)
   const { loading, error, products, page, pages } = productList
@@ -36,15 +44,19 @@ const FilterScreen = ({ match, location }) => {
     'Fruits and Vegetables',
     'Meat',
     'Pulses and Beans',
-    'Toothpaste'
   ]
 
   const applyFilterHandler = () => {
-    // Build filter object
-    let filterParams = {}
+    const filterParams = {}
+    
+    console.log('Frontend Filter State:', { selectedCategory, productName, minPrice, maxPrice })
     
     if (selectedCategory) {
       filterParams.category = selectedCategory
+    }
+    
+    if (productName) {
+      filterParams.productName = productName
     }
     
     if (minPrice) {
@@ -55,20 +67,28 @@ const FilterScreen = ({ match, location }) => {
       filterParams.maxPrice = maxPrice
     }
     
+    // Also handle search keyword from URL parameter
+    if (searchKeyword) {
+      filterParams.keyword = searchKeyword
+    }
+    
     // Convert filter object to query string
     const queryString = Object.keys(filterParams)
       .map(key => `${key}=${encodeURIComponent(filterParams[key])}`)
       .join('&')
     
+    console.log('Frontend API Query String:', queryString)
+    
     // Apply filter and navigate
-    dispatch(listProducts('', 1, queryString))
+    dispatch(listProducts('', '', '', queryString))
   }
 
   const clearFilterHandler = () => {
     setMinPrice('')
     setMaxPrice('')
     setSelectedCategory('')
-    dispatch(listProducts('', 1))
+    setProductName('')
+    dispatch(listProducts('', '', '', ''))
   }
 
   return (
@@ -91,6 +111,20 @@ const FilterScreen = ({ match, location }) => {
                   </option>
                 ))}
               </Form.Control>
+            </Card.Body>
+          </Card>
+        </Col>
+        
+        <Col md={4}>
+          <Card>
+            <Card.Body>
+              <Card.Title>Product Name</Card.Title>
+              <Form.Control
+                type="text"
+                placeholder="Enter product name..."
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
+              />
             </Card.Body>
           </Card>
         </Col>
@@ -125,28 +159,22 @@ const FilterScreen = ({ match, location }) => {
       </Row>
       
       <Row className='mt-3'>
-        <Col md={6}>
-          <Button variant="primary" onClick={applyFilterHandler}>
-            Apply Filter
-          </Button>
-        </Col>
-        <Col md={6}>
-          <Button variant="secondary" onClick={clearFilterHandler}>
-            Clear Filter
-          </Button>
-        </Col>
-      </Row>
-
-      <hr className='my-4' />
-
+            <Col md={6}>
+              <Button variant="primary" onClick={applyFilterHandler}>
+                Apply Filter
+              </Button>
+            </Col>
+            <Col md={6}>
+              <Button variant="secondary" onClick={clearFilterHandler}>
+                Clear Filter
+              </Button>
+            </Col>
+          </Row>
+      
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant='danger'>{error}</Message>
-      ) : products.length === 0 ? (
-        <Message variant='info'>
-          No products found matching your filter criteria.
-        </Message>
       ) : (
         <>
           <Row>
@@ -156,11 +184,11 @@ const FilterScreen = ({ match, location }) => {
               </Col>
             ))}
           </Row>
-          <Paginate
-            pages={pages}
-            page={page}
-            keyword={''}
-            category={selectedCategory ? selectedCategory : ''}
+          
+          <Paginate 
+            pages={pages} 
+            page={page} 
+            keyword={location.search.split('=')[1]}
           />
         </>
       )}

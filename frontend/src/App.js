@@ -88,6 +88,10 @@ const App = () => {
           <Route path='/category/:categoryName/page/:pageNumber' component={CategoryProductsScreen} />
           <Route path='/filter' component={FilterScreen} exact />
           <Route path='/filter/page/:pageNumber' component={FilterScreen} />
+          <Route path='/search/:keyword' component={FilterScreen} exact />
+          <Route path='/search/:keyword/page/:pageNumber' component={FilterScreen} />
+          <Route path='/search/:productName' component={FilterScreen} exact />
+          <Route path='/search/:productName/page/:pageNumber' component={FilterScreen} />
           <Route path='/admin/product/create' component={ProductEditScreen} />
           <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
           <Route path='/contact' component={ContactScreen} />

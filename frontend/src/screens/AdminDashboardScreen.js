@@ -5,6 +5,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { listUsers } from '../actions/userActions'
 import { listOrders } from '../actions/orderActions'
 import { listProducts } from '../actions/productActions'
+import { listAdminCatalogues } from '../actions/catalogueActions'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import axios from 'axios'
@@ -24,6 +25,9 @@ const AdminDashboardScreen = ({ history }) => {
 
   const userList = useSelector((state) => state.userList)
   const { loading: loadingUsers, error: errorUsers, users } = userList
+
+  const catalogueList = useSelector((state) => state.catalogueList)
+  const { loading: loadingCatalogues, error: errorCatalogues, catalogues } = catalogueList
 
   // Fetch total product count from backend
   const fetchTotalProductCount = useCallback(async () => {
@@ -52,6 +56,7 @@ const AdminDashboardScreen = ({ history }) => {
     dispatch(listUsers())
     dispatch(listOrders())
     dispatch(listProducts('', 1))
+    dispatch(listAdminCatalogues())
     // Fetch total product count after a delay
     setTimeout(fetchTotalProductCount, 500)
   }, [dispatch, fetchTotalProductCount])
@@ -120,6 +125,27 @@ const AdminDashboardScreen = ({ history }) => {
         <Col md={3} className='mb-3'>
           <Card className='shadow-sm h-100'>
             <Card.Body>
+              <Card.Title><i className='fas fa-book mr-2'></i> Catalogue Management</Card.Title>
+              {loadingCatalogues ? (
+                <Loader />
+              ) : errorCatalogues ? (
+                <Message variant='danger'>{errorCatalogues}</Message>
+              ) : (
+                <Card.Text>
+                  Create and manage product catalogues
+                  {catalogues ? ` (${catalogues.length} catalogues)` : ''}
+                </Card.Text>
+              )}
+              <LinkContainer to='/admin/catalogues'>
+                <Button variant='info'>Go to Catalogues</Button>
+              </LinkContainer>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={3} className='mb-3'>
+          <Card className='shadow-sm h-100'>
+            <Card.Body>
               <Card.Title><i className='fas fa-receipt mr-2'></i> Order Management</Card.Title>
               {loadingOrders ? (
                 <Loader />
@@ -132,13 +158,15 @@ const AdminDashboardScreen = ({ history }) => {
                 </Card.Text>
               )}
               <LinkContainer to='/admin/orderlist'>
-                <Button variant='info'>Go to Orders</Button>
+                <Button variant='warning'>Go to Orders</Button>
               </LinkContainer>
             </Card.Body>
           </Card>
         </Col>
+      </Row>
 
-        <Col md={3} className='mb-3'>
+      <Row className='mt-3'>
+        <Col md={6} className='mb-3'>
           <Card className='shadow-sm h-100'>
             <Card.Body>
               <Card.Title><i className='fas fa-chart-line mr-2'></i> Sales & Profit Management</Card.Title>
@@ -147,7 +175,7 @@ const AdminDashboardScreen = ({ history }) => {
                 with comprehensive reporting tools
               </Card.Text>
               <LinkContainer to='/admin/sales-profit'>
-                <Button variant='warning'>Go to Analytics</Button>
+                <Button variant='primary'>Go to Analytics</Button>
               </LinkContainer>
             </Card.Body>
           </Card>

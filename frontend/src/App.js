@@ -18,6 +18,10 @@ import UserListScreen from './screens/UserListScreen'
 import UserEditScreen from './screens/UserEditScreen'
 import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
+import CatalogueListScreen from './screens/CatalogueListScreen'
+import CatalogueEditScreen from './screens/CatalogueEditScreen'
+import CatalogueScreen from './screens/CatalogueScreen'
+import CatalogueDetailScreen from './screens/CatalogueDetailScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import AdminDashboardScreen from './screens/AdminDashboardScreen'
 import SalesProfitScreen from './screens/SalesProfitScreen'
@@ -94,6 +98,11 @@ const App = () => {
           <Route path='/search/:productName/page/:pageNumber' component={FilterScreen} />
           <Route path='/admin/product/create' component={ProductEditScreen} />
           <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
+          <Route path='/admin/catalogues' component={CatalogueListScreen} exact />
+          <Route path='/admin/catalogue/create' component={CatalogueEditScreen} />
+          <Route path='/admin/catalogue/:id/edit' component={CatalogueEditScreen} />
+          <Route path='/catalogues' component={CatalogueScreen} exact />
+          <Route path='/catalogue/:id' component={CatalogueDetailScreen} />
           <Route path='/contact' component={ContactScreen} />
           <Route path='/product/:id' component={ProductScreen} />
           <Route path='/cart/:id?' component={CartScreen} />

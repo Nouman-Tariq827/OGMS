@@ -1,11 +1,12 @@
 import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
+import Order from '../models/orderModel.js'
 
 // @desc    Fetch all products (Browse the catalogue)
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 12 // Number of products to show per page (12 = 3 rows of 4 cards)
+  const pageSize = 1000 // Number of products to show per page (increased to show all products)
   const page = Number(req.query.pageNumber) || 1 // Current page number from URL
 
   console.log('Backend - Received Query Parameters:', req.query)
@@ -89,6 +90,128 @@ const getProducts = asyncHandler(async (req, res) => {
 
   // 3. Send back the products along with pagination details
   res.json({ products, page, pages: Math.ceil(count / pageSize) })
+})
+
+// @desc    Get sales report
+// @route   GET /api/products/reports/sales
+// @access  Private/Admin
+const getSalesReport = asyncHandler(async (req, res) => {
+  const { startDate, endDate, period } = req.query
+  
+  let dateFilter = {}
+  
+  if (period === 'today') {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    dateFilter.createdAt = { $gte: today }
+  } else if (period === 'week') {
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    dateFilter.createdAt = { $gte: weekAgo }
+  } else if (period === 'month') {
+    const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    dateFilter.createdAt = { $gte: monthAgo }
+  } else if (startDate && endDate) {
+    dateFilter.createdAt = {
+      $gte: new Date(startDate),
+      $lte: new Date(endDate)
+    }
+  }
+  
+  const orders = await Order.find(dateFilter)
+  
+  const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0)
+  const totalOrders = orders.length
+  const deliveredOrders = orders.filter(order => order.isDelivered).length
+  const pendingOrders = orders.filter(order => !order.isDelivered).length
+  const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
+  const deliveredRevenue = orders
+    .filter(order => order.isDelivered)
+    .reduce((sum, order) => sum + order.totalPrice, 0)
+  const profit = deliveredRevenue * 0.3
+  
+  // Get best-selling products
+  const productSales = {}
+  orders.forEach(order => {
+    order.orderItems.forEach(item => {
+      if (!productSales[item.product]) {
+        productSales[item.product] = { quantity: 0, revenue: 0 }
+      }
+      productSales[item.product].quantity += item.qty
+      productSales[item.product].revenue += item.qty * item.price
+    })
+  })
+  
+  const bestSellingProducts = await Promise.all(
+    Object.entries(productSales)
+      .sort((a, b) => b[1].quantity - a[1].quantity)
+      .slice(0, 10)
+      .map(async ([productId, data]) => {
+        const product = await Product.findById(productId)
+        return {
+          productId,
+          name: product?.name || 'Unknown',
+          quantity: data.quantity,
+          revenue: data.revenue
+        }
+      })
+  )
+  
+  res.json({
+    totalRevenue,
+    totalOrders,
+    deliveredOrders,
+    pendingOrders,
+    averageOrderValue,
+    profit,
+    bestSellingProducts,
+    period: period || (startDate && endDate ? 'custom' : 'all')
+  })
+})
+
+// @desc    Get stock report
+// @route   GET /api/products/reports/stock
+// @access  Private/Admin
+const getStockReport = asyncHandler(async (req, res) => {
+  const products = await Product.find({})
+  
+  const lowStockThreshold = 10
+  const lowStockProducts = products.filter(p => p.countInStock > 0 && p.countInStock <= lowStockThreshold)
+  const outOfStockProducts = products.filter(p => p.countInStock === 0)
+  const inStockProducts = products.filter(p => p.countInStock > lowStockThreshold)
+  
+  const totalStock = products.reduce((sum, p) => sum + p.countInStock, 0)
+  const stockValue = products.reduce((sum, p) => sum + (p.countInStock * p.price), 0)
+  
+  const stockByCategory = {}
+  products.forEach(product => {
+    if (!stockByCategory[product.category]) {
+      stockByCategory[product.category] = { count: 0, stock: 0, value: 0 }
+    }
+    stockByCategory[product.category].count += 1
+    stockByCategory[product.category].stock += product.countInStock
+    stockByCategory[product.category].value += product.countInStock * product.price
+  })
+  
+  res.json({
+    totalProducts: products.length,
+    inStockProducts: inStockProducts.length,
+    lowStockProducts: lowStockProducts.length,
+    outOfStockProducts: outOfStockProducts.length,
+    totalStock,
+    stockValue,
+    lowStockProducts: lowStockProducts.map(p => ({
+      _id: p._id,
+      name: p.name,
+      countInStock: p.countInStock,
+      category: p.category
+    })),
+    outOfStockProducts: outOfStockProducts.map(p => ({
+      _id: p._id,
+      name: p.name,
+      category: p.category
+    })),
+    stockByCategory
+  })
 })
 
 // @desc    Fetch single product details
@@ -257,4 +380,6 @@ export {
   updateProduct,
   createProductReview,
   getTopProducts,
+  getSalesReport,
+  getStockReport,
 }

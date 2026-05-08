@@ -93,83 +93,98 @@ const FilterScreen = ({ match, location }) => {
 
   return (
     <>
-      <h1>Filter Products</h1>
-      <Row className='mb-3'>
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Category</Card.Title>
-              <Form.Control
-                as="select"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option value="">All Categories</option>
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </Form.Control>
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Product Name</Card.Title>
-              <Form.Control
-                type="text"
-                placeholder="Enter product name..."
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
-              />
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Min Price</Card.Title>
-              <Form.Control
-                type="number"
-                placeholder="Minimum price"
-                value={minPrice}
-                onChange={(e) => setMinPrice(e.target.value)}
-              />
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Max Price</Card.Title>
-              <Form.Control
-                type="number"
-                placeholder="Maximum price"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
-              />
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      <div className='d-flex justify-content-between align-items-center mb-4'>
+        <h1 className='mb-0'>Filter Products</h1>
+      </div>
       
-      <Row className='mt-3'>
-            <Col md={6}>
-              <Button variant="primary" onClick={applyFilterHandler}>
-                Apply Filter
-              </Button>
+      <Card className='mb-4 shadow-sm' style={{ borderRadius: '12px' }}>
+        <Card.Body style={{ padding: '20px' }}>
+          <Row className='align-items-end g-3'>
+            <Col xs={12} sm={6} md={3}>
+              <Form.Group controlId='category'>
+                <Form.Label className='small mb-1 text-muted'>Category</Form.Label>
+                <Form.Control
+                  as="select"
+                  size="sm"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  style={{ borderRadius: '8px' }}
+                >
+                  <option value="">All Categories</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
             </Col>
-            <Col md={6}>
-              <Button variant="secondary" onClick={clearFilterHandler}>
-                Clear Filter
+            
+            <Col xs={12} sm={6} md={3}>
+              <Form.Group controlId='productName'>
+                <Form.Label className='small mb-1 text-muted'>Product Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  size="sm"
+                  placeholder="Search products..."
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
+                  style={{ borderRadius: '8px' }}
+                />
+              </Form.Group>
+            </Col>
+            
+            <Col xs={12} sm={6} md={3}>
+              <Form.Group controlId='minPrice'>
+                <Form.Label className='small mb-1 text-muted'>Min Price</Form.Label>
+                <Form.Control
+                  type="number"
+                  size="sm"
+                  placeholder="Min"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  style={{ borderRadius: '8px' }}
+                />
+              </Form.Group>
+            </Col>
+            
+            <Col xs={12} sm={6} md={3}>
+              <Form.Group controlId='maxPrice'>
+                <Form.Label className='small mb-1 text-muted'>Max Price</Form.Label>
+                <Form.Control
+                  type="number"
+                  size="sm"
+                  placeholder="Max"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  style={{ borderRadius: '8px' }}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          
+          <Row className='mt-3 d-flex justify-content-end'>
+            <Col xs='auto'>
+              <Button 
+                variant="primary" 
+                size="sm" 
+                onClick={applyFilterHandler} 
+                style={{ borderRadius: '8px', padding: '6px 16px', fontSize: '0.85rem', marginRight: '20px' }}
+              >
+                <i className='fas fa-filter mr-1'></i> Apply Filter
+              </Button>
+              <Button 
+                variant="outline-secondary" 
+                size="sm" 
+                onClick={clearFilterHandler}
+                style={{ borderRadius: '8px', padding: '6px 16px', fontSize: '0.85rem' }}
+              >
+                <i className='fas fa-times mr-1'></i> Clear
               </Button>
             </Col>
           </Row>
+        </Card.Body>
+      </Card>
       
       {loading ? (
         <Loader />

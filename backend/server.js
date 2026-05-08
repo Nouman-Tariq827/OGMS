@@ -12,6 +12,7 @@ import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
+import catalogueRoutes from './routes/catalogueRoutes.js'
 
 dotenv.config()
 dotenv.config({ path: path.join(path.resolve(), 'backend', '.env') })
@@ -39,6 +40,7 @@ app.use('/api/products', productRoutes) // Routes for grocery items
 app.use('/api/users', userRoutes) // Routes for user authentication and profile
 app.use('/api/orders', orderRoutes) // Routes for managing orders
 app.use('/api/upload', uploadRoutes) // Routes for uploading product images
+app.use('/api/catalogues', catalogueRoutes) // Routes for catalogue management
 
 // Handle file uploads (making the 'uploads' folder public)
 const rootDir = path.resolve()

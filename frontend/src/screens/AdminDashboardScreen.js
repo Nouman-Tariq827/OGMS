@@ -169,7 +169,7 @@ const AdminDashboardScreen = ({ history }) => {
         <Col md={6} className='mb-3'>
           <Card className='shadow-sm h-100'>
             <Card.Body>
-              <Card.Title><i className='fas fa-chart-line mr-2'></i> Sales & Profit Management</Card.Title>
+              <Card.Title><i className='fas fa-chart-line mr-2'></i> Sales & Stock Management</Card.Title>
               <Card.Text>
                 Track revenue, profit margins, and sales analytics
                 with comprehensive reporting tools

@@ -146,6 +146,9 @@ const Header = () => {
                   <LinkContainer to='/admin/orderlist'>
                     <Nav.Link className='nav-item-link'>Orders</Nav.Link>
                   </LinkContainer>
+                  <LinkContainer to='/admin/sales-profit'>
+                    <Nav.Link className='nav-item-link'>Sales & Stock Management</Nav.Link>
+                  </LinkContainer>
                   <LinkContainer to='/admin/dashboard'>
                     <Nav.Link className='nav-item-link text-info'><i className='fas fa-tachometer-alt mr-1'></i> Dashboard</Nav.Link>
                   </LinkContainer>

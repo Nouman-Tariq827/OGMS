@@ -40,13 +40,13 @@ const CatalogueDetailScreen = () => {
               <Card.Title as='h1'>{catalogue.name}</Card.Title>
               <Card.Text>{catalogue.description}</Card.Text>
               <Card.Text>
-                <strong>Products in this catalogue: {catalogue.products.length}</strong>
+                <strong>Products in this catalogue: {catalogue.products?.length || 0}</strong>
               </Card.Text>
             </Card.Body>
           </Card>
 
           <h2>Products in this Catalogue</h2>
-          {catalogue.products.length === 0 ? (
+          {!catalogue.products || catalogue.products.length === 0 ? (
             <Message>No products in this catalogue</Message>
           ) : (
             <Row>

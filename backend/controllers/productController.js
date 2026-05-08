@@ -119,6 +119,10 @@ const getSalesReport = asyncHandler(async (req, res) => {
   
   const orders = await Order.find(dateFilter)
   
+  console.log('Sales Report - Orders found:', orders.length)
+  console.log('Sales Report - Date filter:', dateFilter)
+  console.log('Sales Report - Orders:', orders.map(o => ({ id: o._id, totalPrice: o.totalPrice, createdAt: o.createdAt })))
+  
   const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0)
   const totalOrders = orders.length
   const deliveredOrders = orders.filter(order => order.isDelivered).length
@@ -128,6 +132,16 @@ const getSalesReport = asyncHandler(async (req, res) => {
     .filter(order => order.isDelivered)
     .reduce((sum, order) => sum + order.totalPrice, 0)
   const profit = deliveredRevenue * 0.3
+  
+  console.log('Sales Report - Calculated values:', {
+    totalRevenue,
+    totalOrders,
+    deliveredOrders,
+    pendingOrders,
+    averageOrderValue,
+    deliveredRevenue,
+    profit
+  })
   
   // Get best-selling products
   const productSales = {}
@@ -172,12 +186,19 @@ const getSalesReport = asyncHandler(async (req, res) => {
 // @route   GET /api/products/reports/stock
 // @access  Private/Admin
 const getStockReport = asyncHandler(async (req, res) => {
+  console.log('Stock Report Endpoint Called')
   const products = await Product.find({})
+  console.log('Stock Report - Total products found:', products.length)
   
   const lowStockThreshold = 10
   const lowStockProducts = products.filter(p => p.countInStock > 0 && p.countInStock <= lowStockThreshold)
   const outOfStockProducts = products.filter(p => p.countInStock === 0)
   const inStockProducts = products.filter(p => p.countInStock > lowStockThreshold)
+  
+  console.log('Stock Report - Low Stock Products:', lowStockProducts.length)
+  console.log('Stock Report - Out of Stock Products:', outOfStockProducts.length)
+  console.log('Stock Report - Low Stock Details:', lowStockProducts.map(p => ({ name: p.name, countInStock: p.countInStock })))
+  console.log('Stock Report - Out of Stock Details:', outOfStockProducts.map(p => ({ name: p.name, countInStock: p.countInStock })))
   
   const totalStock = products.reduce((sum, p) => sum + p.countInStock, 0)
   const stockValue = products.reduce((sum, p) => sum + (p.countInStock * p.price), 0)
@@ -192,6 +213,12 @@ const getStockReport = asyncHandler(async (req, res) => {
     stockByCategory[product.category].value += product.countInStock * product.price
   })
   
+  console.log('Stock Report - Total Products:', products.length)
+  console.log('Stock Report - Low Stock Products:', lowStockProducts.length)
+  console.log('Stock Report - Out of Stock Products:', outOfStockProducts.length)
+  console.log('Stock Report - Low Stock Details:', lowStockProducts.map(p => ({ name: p.name, countInStock: p.countInStock })))
+  console.log('Stock Report - Out of Stock Details:', outOfStockProducts.map(p => ({ name: p.name, countInStock: p.countInStock })))
+  
   res.json({
     totalProducts: products.length,
     inStockProducts: inStockProducts.length,
@@ -199,13 +226,20 @@ const getStockReport = asyncHandler(async (req, res) => {
     outOfStockProducts: outOfStockProducts.length,
     totalStock,
     stockValue,
-    lowStockProducts: lowStockProducts.map(p => ({
+    allProducts: products.map(p => ({
+      _id: p._id,
+      name: p.name,
+      countInStock: p.countInStock,
+      category: p.category,
+      price: p.price
+    })),
+    lowStockProductsData: lowStockProducts.map(p => ({
       _id: p._id,
       name: p.name,
       countInStock: p.countInStock,
       category: p.category
     })),
-    outOfStockProducts: outOfStockProducts.map(p => ({
+    outOfStockProductsData: outOfStockProducts.map(p => ({
       _id: p._id,
       name: p.name,
       category: p.category

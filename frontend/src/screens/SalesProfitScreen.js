@@ -38,6 +38,7 @@ const SalesProfitScreen = ({ history }) => {
       })
       setSalesReport(data)
     } catch (error) {
+      console.error('Sales Report Error:', error)
       setErrorSales(error.response?.data?.message || error.message)
     } finally {
       setLoadingSales(false)
@@ -53,6 +54,7 @@ const SalesProfitScreen = ({ history }) => {
       })
       setStockReport(data)
     } catch (error) {
+      console.error('Stock Report Error:', error)
       setErrorStock(error.response?.data?.message || error.message)
     } finally {
       setLoadingStock(false)
@@ -67,7 +69,8 @@ const SalesProfitScreen = ({ history }) => {
       fetchStockReport()
       dispatch(listOrders())
     }
-  }, [dispatch, history, userInfo, dateFilter, startDate, endDate, fetchSalesReport, fetchStockReport])
+  }, [dispatch, history, userInfo, dateFilter, startDate, endDate])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-PK', {
@@ -89,8 +92,23 @@ const SalesProfitScreen = ({ history }) => {
         </Button>
       </div>
 
-      <Tabs activeKey={key} onSelect={(k) => setKey(k)} className='mb-4'>
-        <Tab eventKey="sales" title="Sales Reports">
+      <Tabs activeKey={key} onSelect={(k) => setKey(k)} className='mb-4' style={{ marginBottom: '2rem' }}>
+        <Tab eventKey="sales" title={
+          <span style={{ 
+            padding: '8px 16px', 
+            borderRadius: '8px',
+            backgroundColor: key === 'sales' ? '#28a745' : '#e9ecef',
+            color: key === 'sales' ? '#ffffff' : '#495057',
+            fontWeight: '600',
+            display: 'inline-block',
+            marginRight: '8px',
+            border: key === 'sales' ? '2px solid #28a745' : '2px solid #ced4da',
+            transition: 'all 0.3s ease'
+          }}>
+            <i className='fas fa-chart-line mr-2'></i>
+            Sales Reports
+          </span>
+        }>
           {/* Date Filter */}
           <Card className='mb-4'>
             <Card.Body>
@@ -152,7 +170,7 @@ const SalesProfitScreen = ({ history }) => {
                   <Card className='shadow-sm h-100 bg-primary text-white'>
                     <Card.Body>
                       <Card.Title><i className='fas fa-dollar-sign mr-2'></i>Total Revenue</Card.Title>
-                      <h2 className='mb-0'>{formatCurrency(salesReport.totalRevenue)}</h2>
+                      <h2 className='mb-0 text-white'>{formatCurrency(salesReport.totalRevenue)}</h2>
                       <small>From all orders</small>
                     </Card.Body>
                   </Card>
@@ -221,7 +239,22 @@ const SalesProfitScreen = ({ history }) => {
           ) : null}
         </Tab>
 
-        <Tab eventKey="stock" title="Stock Reports">
+        <Tab eventKey="stock" title={
+          <span style={{ 
+            padding: '8px 16px', 
+            borderRadius: '8px',
+            backgroundColor: key === 'stock' ? '#28a745' : '#e9ecef',
+            color: key === 'stock' ? '#ffffff' : '#495057',
+            fontWeight: '600',
+            display: 'inline-block',
+            marginLeft: '8px',
+            border: key === 'stock' ? '2px solid #28a745' : '2px solid #ced4da',
+            transition: 'all 0.3s ease'
+          }}>
+            <i className='fas fa-boxes mr-2'></i>
+            Stock Reports
+          </span>
+        }>
           {loadingStock ? (
             <Loader />
           ) : errorStock ? (
@@ -234,7 +267,7 @@ const SalesProfitScreen = ({ history }) => {
                   <Card className='shadow-sm h-100 bg-primary text-white'>
                     <Card.Body>
                       <Card.Title><i className='fas fa-boxes mr-2'></i>Total Products</Card.Title>
-                      <h2 className='mb-0'>{stockReport.totalProducts}</h2>
+                      <h2 className='mb-0 text-white'>{stockReport.totalProducts}</h2>
                       <small>All products in inventory</small>
                     </Card.Body>
                   </Card>
@@ -257,8 +290,7 @@ const SalesProfitScreen = ({ history }) => {
                         <i className='fas fa-exclamation-triangle mr-2'></i>
                         Low Stock
                       </Card.Title>
-                      <h2 className='mb-0'>{stockReport.lowStockProducts.length}</h2>
-                      <small>≤ 10 items remaining</small>
+                      <h2 className='mb-0 text-white'>{stockReport.lowStockProducts || 0}</h2>
                     </Card.Body>
                   </Card>
                 </Col>
@@ -267,8 +299,7 @@ const SalesProfitScreen = ({ history }) => {
                   <Card className='shadow-sm h-100 bg-danger text-white'>
                     <Card.Body>
                       <Card.Title><i className='fas fa-times-circle mr-2'></i>Out of Stock</Card.Title>
-                      <h2 className='mb-0'>{stockReport.outOfStockProducts.length}</h2>
-                      <small>Need to restock</small>
+                      <h2 className='mb-0'>{stockReport.outOfStockProducts || 0}</h2>
                     </Card.Body>
                   </Card>
                 </Col>
@@ -296,12 +327,12 @@ const SalesProfitScreen = ({ history }) => {
               </Row>
 
               {/* Low Stock Alert */}
-              {stockReport.lowStockProducts.length > 0 && (
+              {(stockReport.lowStockProducts > 0 || stockReport.outOfStockProducts > 0) && (
                 <Card className='mb-4 border-warning'>
                   <Card.Body>
-                    <Card.Title className='text-warning'><i className='fas fa-exclamation-triangle mr-2'></i>Low Stock Alert</Card.Title>
+                    <Card.Title className='text-warning'><i className='fas fa-exclamation-triangle mr-2'></i>Stock Alert</Card.Title>
                     <Alert variant='warning'>
-                      {stockReport.lowStockProducts.length} products are running low on stock (≤ 10 items)
+                      Products requiring attention
                     </Alert>
                     <Table striped bordered hover responsive className='table-sm'>
                       <thead>
@@ -312,11 +343,18 @@ const SalesProfitScreen = ({ history }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {stockReport.lowStockProducts.map((product) => (
+                        {stockReport.lowStockProductsData && stockReport.lowStockProductsData.map((product) => (
                           <tr key={product._id}>
                             <td>{product.name}</td>
                             <td>{product.category}</td>
                             <td><strong className='text-warning'>{product.countInStock}</strong></td>
+                          </tr>
+                        ))}
+                        {stockReport.outOfStockProductsData && stockReport.outOfStockProductsData.map((product) => (
+                          <tr key={product._id}>
+                            <td>{product.name}</td>
+                            <td>{product.category}</td>
+                            <td><strong className='text-danger'>0</strong></td>
                           </tr>
                         ))}
                       </tbody>
@@ -353,28 +391,51 @@ const SalesProfitScreen = ({ history }) => {
                 </Card>
               )}
 
-              {/* Stock by Category */}
+              {/* Stock by Products */}
               <Card className='mb-4'>
                 <Card.Body>
-                  <Card.Title><i className='fas fa-layer-group mr-2'></i>Stock by Category</Card.Title>
+                  <Card.Title><i className='fas fa-boxes mr-2'></i>Stock by Products</Card.Title>
                   <Table striped bordered hover responsive className='table-sm'>
                     <thead>
                       <tr>
+                        <th>PRODUCT</th>
                         <th>CATEGORY</th>
-                        <th>PRODUCTS</th>
-                        <th>TOTAL STOCK</th>
-                        <th>STOCK VALUE</th>
+                        <th>STOCK</th>
+                        <th>VALUE</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.entries(stockReport.stockByCategory).map(([category, data]) => (
-                        <tr key={category}>
-                          <td>{category}</td>
-                          <td>{data.count}</td>
-                          <td>{data.stock}</td>
-                          <td>{formatCurrency(data.value)}</td>
-                        </tr>
-                      ))}
+                      {stockReport.allProducts && stockReport.allProducts.map((product) => {
+                        const isLowStock = product.countInStock > 0 && product.countInStock <= 10;
+                        const isOutOfStock = product.countInStock === 0;
+                        
+                        return (
+                          <tr 
+                            key={product._id} 
+                            style={{ 
+                              backgroundColor: isOutOfStock ? '#f8d7da' : isLowStock ? '#fff3cd' : 'transparent'
+                            }}
+                          >
+                            <td>
+                              {isOutOfStock && <i className='fas fa-times-circle text-danger mr-2'></i>}
+                              {isLowStock && <i className='fas fa-exclamation-triangle text-warning mr-2'></i>}
+                              {!isOutOfStock && !isLowStock && <i className='fas fa-check-circle text-success mr-2'></i>}
+                              {product.name}
+                            </td>
+                            <td>{product.category}</td>
+                            <td>
+                              {isOutOfStock ? (
+                                <strong className='text-danger'>0</strong>
+                              ) : isLowStock ? (
+                                <strong className='text-warning'>{product.countInStock}</strong>
+                              ) : (
+                                <strong className='text-success'>{product.countInStock}</strong>
+                              )}
+                            </td>
+                            <td>{formatCurrency(product.countInStock * product.price)}</td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </Table>
                 </Card.Body>

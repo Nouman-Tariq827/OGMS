@@ -94,11 +94,9 @@ const CartScreen = ({ match, location, history }) => {
     color: '#495057'
   }
 
-  // Filter orders that are not delivered yet and sort by date (most recent first)
-  const undeliveredOrders = orders 
-    ? orders
-        .filter(order => !order.isDelivered)
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  // Sort all orders by date (most recent first)
+  const sortedOrders = orders 
+    ? orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     : []
 
   const checkoutHandler = () => {
@@ -132,7 +130,7 @@ const CartScreen = ({ match, location, history }) => {
             <Nav.Item>
               <Nav.Link eventKey="history">
                 <i className="fas fa-history mr-2"></i>
-                Shopping History ({undeliveredOrders.length})
+                Shopping History ({sortedOrders.length})
               </Nav.Link>
             </Nav.Item>
           </Nav>
@@ -244,13 +242,13 @@ const CartScreen = ({ match, location, history }) => {
               <Loader />
             ) : errorOrders ? (
               <Message variant='danger'>{errorOrders}</Message>
-            ) : undeliveredOrders.length === 0 ? (
+            ) : sortedOrders.length === 0 ? (
               <Message>
-                You have no pending orders. <Link to='/'>Continue Shopping</Link>
+                You have no orders. <Link to='/'>Continue Shopping</Link>
               </Message>
             ) : (
               <ListGroup variant='flush'>
-                {undeliveredOrders.map((order) => (
+                {sortedOrders.map((order) => (
                   <ListGroup.Item key={order._id} className="mb-2">
                     <Row className="align-items-center">
                       <Col md={4}>

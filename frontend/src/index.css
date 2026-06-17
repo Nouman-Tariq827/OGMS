@@ -790,8 +790,203 @@ h2 {
     object-position: center !important;
   }
   
-  .hero-slider .carousel-item {
+   .hero-slider .carousel-item {
     height: 500px !important;
     overflow: hidden !important;
+  }
+}
+
+/* ========== MOBILE RESPONSIVE STYLES ========== */
+
+/* Hide mobile menu on all screen sizes by default */
+.mobile-menu-container {
+  display: none;
+}
+
+/* Only applies to screens narrower than 768px */
+
+@media (max-width: 767px) {
+  header {
+    position: relative;
+    z-index: 1050;
+  }
+
+  /* Hamburger button */
+  .hamburger-btn {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hamburger-btn:active {
+    color: #28a745;
+  }
+
+  /* Brand logo smaller on mobile */
+  .brand-logo {
+    font-size: 1.2rem !important;
+  }
+
+  /* Mobile menu container */
+  .mobile-menu-container {
+    display: none;
+  }
+
+  .mobile-menu-container.mobile-menu-open {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    z-index: 1050;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  .mobile-menu-content {
+    padding: 0.25rem 0;
+  }
+
+  .mobile-nav-item {
+    padding: 0.85rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.15s;
+  }
+
+  .mobile-nav-item:active {
+    background-color: #e8f5e9;
+    color: #28a745;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-arrow {
+    transition: transform 0.2s ease;
+    font-size: 0.8rem;
+    color: #888;
+  }
+
+  .mobile-arrow.open {
+    transform: rotate(180deg);
+  }
+
+  .mobile-category-sublist {
+    background-color: #f9f9f9;
+  }
+
+  .mobile-category-item .category-indent {
+    padding-left: 1.2rem;
+    font-size: 0.95rem;
+    color: #555;
+  }
+
+  .mobile-search-wrapper .search-form {
+    width: 100%;
+  }
+
+  .mobile-search-wrapper .search-input {
+    width: 100% !important;
+    font-size: 0.9rem !important;
+    padding: 0.5rem 1rem 0.5rem 2.5rem !important;
+  }
+
+  .mobile-search-wrapper .fa-search {
+    top: 50% !important;
+    transform: translateY(-50%);
+  }
+
+  /* Hide hero slider on mobile */
+  .hero-slider {
+    display: none !important;
+  }
+
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Adjust main container padding */
+  main .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Adjust heading sizes for mobile */
+  h1 {
+    font-size: 1.4rem !important;
+  }
+
+  h2 {
+    font-size: 1.15rem !important;
+  }
+
+  h3 {
+    font-size: 1rem !important;
+  }
+
+  /* Product card adjustments */
+  .product-card {
+    margin: 1rem 0 !important;
+  }
+
+  .product-card .card-img-top {
+    height: 160px !important;
+  }
+
+  /* Admin table adjustments */
+  .admin-product-list .btn-sm,
+  .admin-user-list .btn-sm {
+    min-width: 36px;
+    height: 36px;
+    padding: 8px 10px;
+  }
+
+  .table td,
+  .table th {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.5rem;
+  }
+
+  /* Form adjustments */
+  .form-control {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.85rem;
+  }
+}
+
+/* Extra small devices (phones, <576px) */
+@media (max-width: 575px) {
+  .brand-logo {
+    font-size: 1rem !important;
+  }
+
+  .product-card .card-img-top {
+    height: 140px !important;
+  }
+
+  .col-sm-12, .col-md-6, .col-lg-4, .col-xl-3 {
+    margin-bottom: 1rem !important;
   }
 }

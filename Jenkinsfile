@@ -2,22 +2,32 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+
+        stage('Checkout Source') {
             steps {
-                echo 'Cloning repository...'
+                checkout scm
             }
         }
 
-        stage('System Info') {
+        stage('Install Backend Dependencies') {
             steps {
-                sh 'pwd'
-                sh 'ls -la'
+                dir('backend') {
+                    sh 'npm install'
+                }
             }
         }
 
-        stage('Done') {
+        stage('Install Frontend Dependencies') {
             steps {
-                echo 'Pipeline completed successfully!'
+                dir('frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Pipeline Complete') {
+            steps {
+                echo 'Backend and Frontend dependencies installed successfully!'
             }
         }
     }
